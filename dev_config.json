@@ -1,0 +1,7 @@
+{
+    "environment": "dev",
+    "call_number": 50,
+    "monitoring": {"sentry_dsn": ""}
+}
+
+
