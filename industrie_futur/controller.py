@@ -27,7 +27,7 @@ def format_response(response, status_code=200):
 
 @api_v1.route("/home", methods=['GET'])
 def main():
-    return render_template("index.html"), 200
+    return render_template("home_factored.html"), 200
 
 
 @api_v1.route("/test", methods=['GET'])
