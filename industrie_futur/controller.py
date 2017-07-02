@@ -31,8 +31,18 @@ def main():
 
 
 @api_v1.route("/test", methods=['GET'])
-def raw_content():
+def test():
     return render_template("template_page_content.html"), 200
+
+
+@api_v1.route("/fillform", methods=['GET'])
+def get_form():
+    return render_template("fill_form.html"), 200
+
+
+@api_v1.route("/fillform", methods=['POST'])
+def fill_form():
+    return render_template("fill_form.html"), 200
 
 
 @api_v1.route('/info', methods=['GET'])
