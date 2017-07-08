@@ -11,7 +11,7 @@ from . import LOG, sentry, login_manager
 import os
 import requests
 from . import app
-
+import ast
 api_v1 = Blueprint('website_industrie_futur', __name__, template_folder='templates')
 
 #
@@ -42,7 +42,14 @@ def get_form():
 
 @api_v1.route("/fillform", methods=['POST'])
 def fill_form():
-    return render_template("fill_form.html"), 200
+    print(request.__dict__)
+    sent_back_form = request.form
+    try:
+        print(sent_back_form.__dict__)
+        name = sent_back_form.get('name')
+        return render_template("fill_form.html", success="Thanks {}".format(name)), 200
+    except:
+        return render_template("fill_form.html", error="The form was not correctly filled!"), 200
 
 
 @api_v1.route('/info', methods=['GET'])
