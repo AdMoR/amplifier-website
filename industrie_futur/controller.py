@@ -47,6 +47,8 @@ def fill_form():
     try:
         print(sent_back_form.__dict__)
         name = sent_back_form.get('name')
+        if name is None or name == '':
+            raise Exception
         return render_template("fill_form.html", success="Thanks {}".format(name)), 200
     except:
         return render_template("fill_form.html", error="The form was not correctly filled!"), 200
