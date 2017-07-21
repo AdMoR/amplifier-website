@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block header %} {% include 'header_team.html' %} {% endblock %}
+
+{% block content %}
+
+    {% if create_team %}
+
+    {% endif %}
+
+    {% if join_team %}
+
+    <!-- Container (Portfolio Section) -->
+    <div id="join_team" class="container-fluid text-center bg-grey">
+      <h2></h2><br>
+      <h4>Rejoins une équipe</h4>
+      {% for team in available_teams %}
+          <div class="row text-center slideanim">
+            <div class="col-sm-4">
+              <div class="thumbnail">
+                <img src="{{url_for('static', filename=team.logo)}}" alt="team_logo" width="400" height="300">
+                <p><strong>{{ team.name }}</strong></p>
+                <p>{{ team.description }}</p>
+
+                <a href="/home" class="btn btn-info" role="button">Link Button</a>
+
+              </div>
+            </div>
+          </div>
+      {% endfor %}
+      </div><br>
+
+    {% endif %}
+
+
+{% endblock %}

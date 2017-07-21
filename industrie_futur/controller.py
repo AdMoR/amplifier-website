@@ -49,9 +49,27 @@ def fill_form():
         name = sent_back_form.get('name')
         if name is None or name == '':
             raise Exception
-        return render_template("fill_form.html", success="Thanks {}".format(name)), 200
+        return render_template("fill_form.html",
+                               success="Thanks {}".format(name)), 200
     except:
-        return render_template("fill_form.html", error="The form was not correctly filled!"), 200
+        return render_template("fill_form.html",
+                               error="Le formulaire n'a pas été rempli correctement!"), 200
+
+
+@api_v1.route("/team", methods=['GET'])
+def team_choice():
+    return render_template("choose_your_team.html"), 200
+
+
+@api_v1.route("/join_team", methods=['GET'])
+def join_team():
+    available_teams = [{"name": "SuperTeam", "logo": "img/futur.jpg", "description": "Wow!"}]
+    return render_template("choose_your_team.html", join_team=True, available_teams=available_teams), 200
+
+
+@api_v1.route("/create_team", methods=['GET'])
+def create_team():
+    return render_template("choose_your_team.html"), 200
 
 
 @api_v1.route('/info', methods=['GET'])
@@ -62,3 +80,7 @@ def info():
 
     return jsonify(response), code
 
+
+def invite_user_to_slack(first_name, last_name, email, token):
+    url = "https://slack.com/api/users.admin.invite?token={}&email={}&channels=C000000001,C000000002&first_name={}&last_name={}"
+    return url.format(token, email, first_name, last_name)
