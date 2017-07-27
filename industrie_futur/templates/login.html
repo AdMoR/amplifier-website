@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block header %}
+{% if success %}
+{% include 'header_team.html' %}
+{% else %}
+    <header id="top" class="header">
+        <div class="text-vertical-center">
+            <h1>Alliance Industrie du Futur</h1>
+            <h3></h3>
+            <br>
+        </div>
+    </header>
+{% endif %}
+{% endblock %}
+
+{% block content %}
+
+    {% if error %}
+        <div class="alert alert-warning text-center" role="alert">{{error}}</div>
+    {% endif %}
+
+    {% if success %}
+        <div class="alert alert-success text-center" role="alert">{{success}}</div>
+    {% endif %}
+
+  <form role="form" action="{{url_for('website_industrie_futur.login')}}" method="post" enctype="multipart/form-data">
+        <span class="form-group">
+
+            <div class="row">
+            <label class="center-block col-lg-6 text-center">Log In:</label>
+            <input class="center-block col-lg-6 text-center" type="text" class="form-control" name="email" id="email" placeholder="Email" />
+            </div>
+
+            <div class="row">
+            <input class="center-block col-lg-6 text-center" type="password" class="form-control" name="password" id="password" placeholder="Password" />
+            </div>
+
+            <div class="row">
+              <input type="submit" class="center-block col-lg-2 btn btn-primary"></button>
+            </div>
+
+        </span>
+  </form>
+
+{% endblock %}

@@ -5,13 +5,19 @@ import json
 from flask import render_template, Blueprint, jsonify, request, send_from_directory, g
 from flask_login import login_user, logout_user, login_required, current_user
 from werkzeug.wrappers import Response
-from functools import wraps
 from config import Config as config
 from . import LOG, sentry, login_manager
-import os
-import requests
 from . import app
-import ast
+
+
+from .user_data.user import User
+from .databases import RedisUserHandler
+from .user_data import MissingFieldException
+from .team_handling import Team, TeamHandler
+
+
+redis_access = RedisUserHandler()
+team_handler = TeamHandler(redis_access)
 api_v1 = Blueprint('website_industrie_futur', __name__, template_folder='templates')
 
 #
@@ -48,28 +54,103 @@ def fill_form():
         print(sent_back_form.__dict__)
         name = sent_back_form.get('name')
         if name is None or name == '':
-            raise Exception
+            raise MissingFieldException
+        user = User(cache=redis_access,
+                    email=sent_back_form.get('email'),
+                    password=sent_back_form.get('password'),
+                    form=sent_back_form)
+        user.create_user()
+        valid = user.check_user()
+        if valid is True:
+            LOG.info("User {} was logged in !".format(name))
+            login_user(user, remember=True)
         return render_template("fill_form.html",
-                               success="Thanks {}".format(name)), 200
-    except:
+                               success="Merci {}, votre compte a ete cree.".format(name)), 200
+    except MissingFieldException:
         return render_template("fill_form.html",
-                               error="Le formulaire n'a pas été rempli correctement!"), 200
+                               error="Le formulaire n'a pas ete rempli correctement!"), 200
+
+
+@api_v1.route("/login", methods=['GET'])
+def guest_login():
+    LOG.debug(current_user)
+    return render_template("login.html"), 200
+
+
+@api_v1.route("/login", methods=['POST'])
+def login():
+    user = User(cache=redis_access,
+                email=request.form.get('email'),
+                password=request.form.get('password'))
+    LOG.debug(user)
+    valid = user.check_user()
+    print("Valid is {}".format(valid))
+    if valid is True:
+        login_user(user, remember=True)
+        return render_template("login.html", success="Login reussi"), 200
+    else:
+        return render_template("login.html", error="Email or mot de passe inccorect"), 200
 
 
 @api_v1.route("/team", methods=['GET'])
+@login_required
 def team_choice():
     return render_template("choose_your_team.html"), 200
 
 
 @api_v1.route("/join_team", methods=['GET'])
+@login_required
+def view_team_list():
+    available_teams = team_handler.get_incomplete_teams()
+    dict_formated_av_teams = [t._to_dict_() for t in available_teams]
+    return render_template("choose_your_team.html", join_team=True,
+                           available_teams=dict_formated_av_teams), 200
+
+@api_v1.route("/join_team", methods=['POST'])
+@login_required
 def join_team():
-    available_teams = [{"name": "SuperTeam", "logo": "img/futur.jpg", "description": "Wow!"}]
-    return render_template("choose_your_team.html", join_team=True, available_teams=available_teams), 200
+
+    # The post button will give the selected team id
+    team_id = request.form["team"]
+    # We assign the current user to the team
+    team_handler.add_member_in_team_by_name(team_id, current_user.email)
+
+    # Render the normal view of team
+    return view_team_list()
 
 
 @api_v1.route("/create_team", methods=['GET'])
+@login_required
+def view_team_form():
+    return render_template("choose_your_team.html", create_team=True), 200
+
+
+@api_v1.route("/create_team", methods=['POST'])
+@login_required
 def create_team():
-    return render_template("choose_your_team.html"), 200
+    sent_back_form = request.form
+
+    #try:
+    name = sent_back_form.get('name')
+    image_url = sent_back_form.get('image_url')
+    description = sent_back_form.get('description')
+
+    print(current_user.__dict__)
+
+    creator_name = current_user.email
+
+    team_handler.create_team(name, description, creator_name, image_url)
+
+    dict_formated_av_teams = [team_handler.all_teams[-1]._to_dict_()]
+    print(dict_formated_av_teams)
+
+    return render_template("choose_your_team.html", join_team=True,
+                           success="Equipe cree =)",
+                           available_teams=dict_formated_av_teams), 200
+
+    #except:
+    #    return render_template("choose_your_team.html", create_team=True,
+    #                           error="Une erreur est survenue"), 200
 
 
 @api_v1.route('/info', methods=['GET'])
@@ -81,6 +162,21 @@ def info():
     return jsonify(response), code
 
 
+######### Helper #############################
+
 def invite_user_to_slack(first_name, last_name, email, token):
     url = "https://slack.com/api/users.admin.invite?token={}&email={}&channels=C000000001,C000000002&first_name={}&last_name={}"
     return url.format(token, email, first_name, last_name)
+
+
+######### Session ##############################################################
+@login_manager.user_loader
+def load_user(user_id):
+    LOG.debug(user_id)
+    return User.get(redis_access, user_id)
+
+
+@login_manager.unauthorized_handler
+def unauthaurized():
+    return render_template("error.html",
+                           message="You are not authorized to access this page. Please login first."), 403

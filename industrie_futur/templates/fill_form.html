@@ -27,30 +27,35 @@
     </section>
 
 
+  <label class="center-block col-lg-6 text-center">Merci de remplir:</label>
   <form role="form" action="{{url_for('website_industrie_futur.fill_form')}}" method="post" enctype="multipart/form-data">
         <span class="form-group">
 
             <div class="row">
-            <input class="col-sm-offset-3 col-lg-6 text-center" type="text" class="form-control" name="surname" id="Prénom" placeholder="Prénom" />
+            <input class="center-block col-lg-6 text-center" type="text" class="form-control" name="surname" id="Prénom" placeholder="Prénom" />
             </div>
 
             <div class="row">
-            <input class="col-sm-offset-3 col-lg-6 text-center" type="text" class="form-control" name="name" id="Nom" placeholder="Nom" />
+            <input class="center-block col-lg-6 text-center" type="text" class="form-control" name="name" id="Nom" placeholder="Nom" />
             </div>
 
             <div class="row">
-            <input type="text" class="col-sm-offset-3 col-lg-6 text-center" name="email" id="email" placeholder="Email" />
+            <input type="text" class="center-block col-lg-6 text-center" name="email" id="email" placeholder="Email" />
             </div>
 
             <div class="row">
-            <input type="text" class="col-sm-offset-3 col-lg-6 text-center" name="anniversaire" id="anniversaire" placeholder="Date de naissance" />
+            <input type="password" class="center-block col-lg-6 text-center" name="password" id="paswword" placeholder="password" />
             </div>
 
             <div class="row">
-            <label class="col-sm-offset-3 col-lg-6 text-center" for="sel1">Merci de sélectionner:</label>
+            <input type="text" class="center-block col-lg-6 text-center" name="anniversaire" id="anniversaire" placeholder="Date de naissance" />
             </div>
 
-            <div class="row col-sm-offset-5 col-lg-2">
+            <div class="row">
+            <label class="center-block col-lg-6 text-center" for="sel1">Merci de sélectionner:</label>
+            </div>
+
+            <div class="row center-block col-lg-2">
             <select class="form-control" data-width="fit"  id="sel1" name="filter">
                 <option class="form-control text-center" value="lyceen">Lycéen</option>
                 <option class="form-control text-center" value="etu_uni">Etudiant université/grande école</option>
@@ -59,13 +64,13 @@
             </select>
             </div>
 
-            <div class="row col-sm-offset-3 col-lg-6 ">
-              <label class="col-sm-offset-3 col-lg-6 text-center" for="comment">Qu'est ce qui t'a motivé à t'inscrire:</label>
+            <div class="row center-block col-lg-6 ">
+              <label class="center-block col-lg-6 text-center" for="comment">Qu'est ce qui t'a motivé à t'inscrire:</label>
               <textarea class="form-control" rows="5" id="comment" name="comment"></textarea>
             </div>
 
-            <div class="row col-sm-offset-3 col-lg-6 ">
-              <label class="col-sm-offset-3 col-lg-6 text-center" for="interets">Des passions?</label>
+            <div class="row center-block col-lg-6 ">
+              <label class="center-block col-lg-6 text-center" for="interets">Des passions?</label>
               <textarea class="form-control" rows="2" id="interets" name="interets"></textarea>
             </div>
 
@@ -74,7 +79,7 @@
       </div>
 
       <div class="row">
-        <input type="submit" class="col-sm-offset-5 col-lg-2 btn btn-primary"></button>
+        <input type="submit" class="center-block col-lg-2 btn btn-primary"></button>
       </div>
 
 
