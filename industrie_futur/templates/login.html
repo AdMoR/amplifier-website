@@ -24,20 +24,39 @@
         <div class="alert alert-success text-center" role="alert">{{success}}</div>
     {% endif %}
 
+
+    <section id="form" class="about">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <h2>
+                      Acces a la gestion des equipes
+                    </h2>
+                </div>
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /.container -->
+    </section>
+
+
   <form role="form" action="{{url_for('website_industrie_futur.login')}}" method="post" enctype="multipart/form-data">
-        <span class="form-group">
+        <span class="form-group center-block ">
 
-            <div class="row">
-            <label class="center-block col-lg-6 text-center">Log In:</label>
-            <input class="center-block col-lg-6 text-center" type="text" class="form-control" name="email" id="email" placeholder="Email" />
+            <div class="row center-block text-center">
+            <label class="text-center">Log In:</label>
+            </div>
+
+            <div class="row center-block">
+            <input class="center-block text-center" type="text" class="form-control" name="email" id="email" placeholder="Email" />
             </div>
 
             <div class="row">
-            <input class="center-block col-lg-6 text-center" type="password" class="form-control" name="password" id="password" placeholder="Password" />
+            <input class="center-block text-center" type="password" class="form-control" name="password" id="password" placeholder="Password" />
             </div>
 
             <div class="row">
-              <input type="submit" class="center-block col-lg-2 btn btn-primary"></button>
+              <input type="submit" class="center-block btn btn-primary"></button>
             </div>
 
         </span>

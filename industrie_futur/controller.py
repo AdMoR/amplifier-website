@@ -148,6 +148,12 @@ def create_team():
                            success="Equipe cree =)",
                            available_teams=dict_formated_av_teams), 200
 
+
+@api_v1.route("/challenge", methods=['GET'])
+def view_challenge():
+    return render_template("challenge.html"), 200
+
+
     #except:
     #    return render_template("choose_your_team.html", create_team=True,
     #                           error="Une erreur est survenue"), 200

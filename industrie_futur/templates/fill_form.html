@@ -13,50 +13,43 @@
         <div class="alert alert-success text-center" role="alert">{{success}}</div>
     {% endif %}
 
-    <section id="form" class="about">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12 text-center">
-                    <h2>
-                      Formulaire d'inscription </h2>
-                </div>
+<section id="form" class="about">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h2>
+                  Formulaire d'inscription </h2>
             </div>
-            <!-- /.row -->
         </div>
-        <!-- /.container -->
-    </section>
+        <!-- /.row -->
+    </div>
+    <!-- /.container -->
 
 
-  <label class="center-block col-lg-6 text-center">Merci de remplir:</label>
+<form>
+   <fieldset class="col-centered col-sm-6">
+  <legend class="text-center">Merci de remplir:</legend>
   <form role="form" action="{{url_for('website_industrie_futur.fill_form')}}" method="post" enctype="multipart/form-data">
         <span class="form-group">
 
-            <div class="row">
-            <input class="center-block col-lg-6 text-center" type="text" class="form-control" name="surname" id="Prénom" placeholder="Prénom" />
+            <div class="text-center">
+            <input class="center-block text-center" type="text" class="form-control" name="surname" id="Prénom" placeholder="Prénom" />
+
+            <input class="center-block text-center" type="text" class="form-control" name="name" id="Nom" placeholder="Nom" />
+
+            <input type="text" class="center-block text-center" name="email" id="email" placeholder="Email" />
+
+            <input type="password" class="center-block text-center" name="password" id="paswword" placeholder="password" />
+
+            <input type="text" class="center-block text-center" name="anniversaire" id="anniversaire" placeholder="Date de naissance" />
             </div>
 
-            <div class="row">
-            <input class="center-block col-lg-6 text-center" type="text" class="form-control" name="name" id="Nom" placeholder="Nom" />
+            <div>
+            <label class="center-block text-center" for="sel1">Merci de sélectionner:</label>
             </div>
 
-            <div class="row">
-            <input type="text" class="center-block col-lg-6 text-center" name="email" id="email" placeholder="Email" />
-            </div>
-
-            <div class="row">
-            <input type="password" class="center-block col-lg-6 text-center" name="password" id="paswword" placeholder="password" />
-            </div>
-
-            <div class="row">
-            <input type="text" class="center-block col-lg-6 text-center" name="anniversaire" id="anniversaire" placeholder="Date de naissance" />
-            </div>
-
-            <div class="row">
-            <label class="center-block col-lg-6 text-center" for="sel1">Merci de sélectionner:</label>
-            </div>
-
-            <div class="row center-block col-lg-2">
-            <select class="form-control" data-width="fit"  id="sel1" name="filter">
+            <div class="center-block text-center">
+            <select class="form-control text-center col-lg-6" data-width="fit"  id="sel1" name="filter">
                 <option class="form-control text-center" value="lyceen">Lycéen</option>
                 <option class="form-control text-center" value="etu_uni">Etudiant université/grande école</option>
                 <option class="form-control text-center" value="etu_bts">Etudiant BTS/IUT</option>
@@ -64,30 +57,25 @@
             </select>
             </div>
 
-            <div class="row center-block col-lg-6 ">
-              <label class="center-block col-lg-6 text-center" for="comment">Qu'est ce qui t'a motivé à t'inscrire:</label>
-              <textarea class="form-control" rows="5" id="comment" name="comment"></textarea>
-            </div>
+            <div class="row col-centered">
+              <label class="center-block text-center" for="comment">Qu'est ce qui t'a motivé à t'inscrire:</label>
+              <textarea class="form-control" rows="3" id="comment" name="comment"></textarea>
 
-            <div class="row center-block col-lg-6 ">
-              <label class="center-block col-lg-6 text-center" for="interets">Des passions?</label>
+              <label class="center-block text-center" for="interets">Des passions?</label>
               <textarea class="form-control" rows="2" id="interets" name="interets"></textarea>
+
+              <input type="submit" class="center-block btn btn-primary"></button>
             </div>
 
-      <div class="row">
-      <div class="col-lg-12 text-center">
-      </div>
-
-      <div class="row">
-        <input type="submit" class="center-block col-lg-2 btn btn-primary"></button>
-      </div>
 
 
-        </span>
-  </form>
+      </span>
+    </form>
+  </fieldset>
+</form>
 
+</section>
 
-</div>
 
 
 {% endblock %}
