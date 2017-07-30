@@ -47,7 +47,8 @@ class RedisUserHandler(StrictRedis):
 
     def get_user(self, email):
         user = {}
-        if email in self.keys():
+        all_keys = [str(k) for k in self.keys()]
+        if email in all_keys:
             user['email'] = email
             user['password'] = self.hget(email, "password")
             user['form'] = self.get_session(email)
