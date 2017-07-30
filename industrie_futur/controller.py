@@ -127,8 +127,18 @@ def join_team():
 def view_team_form():
     available_images = [{'name': "factory", 'url': "img/futur.jpg"},
                         {'name': "welcome", 'url': "img/welcome.jpg"},
-                        {'name': "roudente", 'url': "img/roudente.jpg"},
-                        {'name': "futur", 'url': "img/futur.png"}]
+                        {'name': "routourne", 'url': "img/roudente.jpg"},
+                        {'name': "le futur", 'url': "img/futur.png"},
+                        {'name': "tigre du turfun", 'url': "img/tigres_turfu.jpg"},
+                        {'name': "revolution", 'url': "img/RI_old.png"},
+                        {'name': "abstrait", 'url': "img/motards.jpg"},
+                        {'name': "futurisme", 'url': "img/futurisme.jpg"},
+                        {'name': "robot", 'url': "img/dance robot.gif"},
+                        {'name': "revolution", 'url': "img/RI_old.png"},
+                        {'name': "abstrait", 'url': "img/motards.jpg"},
+                        {'name': "futurisme", 'url': "img/futurisme.jpg"},
+                        {'name': "actual frankfurt", 'url': "img/modern_frankfurt.jpg"}
+                        ]
     return render_template("choose_your_team.html",
                            available_images=available_images,
                            create_team=True), 200
@@ -139,12 +149,14 @@ def view_team_form():
 def create_team():
     sent_back_form = request.form
 
+    print('post ', request.__dict__)
+
     #try:
     name = sent_back_form.get('name')
-    image_url = sent_back_form.get('image_url')
+    image_url = sent_back_form.get('logo')
     description = sent_back_form.get('description')
 
-    print(current_user.__dict__)
+    print(sent_back_form.__dict__)
 
     creator_name = current_user.email
 

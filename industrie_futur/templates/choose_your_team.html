@@ -27,15 +27,15 @@
     </section>
 
    <fieldset class="col-centered col-sm-6">
-  <legend class="text-center">Merci de remplir:</legend>
+  <legend class="center-block text-center">Merci de remplir:</legend>
   <form role="form" action="{{url_for('website_industrie_futur.create_team')}}" method="post" enctype="multipart/form-data">
         <span class="form-group">
 
             <div class="row">
               <input class="center-block text-center" type="text" class="form-control" name="name" id="name" placeholder="Nom de l'équipe" />
             </div>
-
-            <label for="center-block text-center sel1">Select logo:</label>
+            <br>
+            <label class="center-block text-center" for="sel1">Select logo:</label>
             <select class="form-control" id="sel1" name="logo" onchange="previewFilter()">
                 {% for image in available_images %}
                 <option class="form-control" value="{{image['url']}}">{{image['name']}}</option>
@@ -45,7 +45,7 @@
             <div class="">
                 <img class="center-block text-center" style="max-width: 50%;" id="preview-filter" src="{{url_for('static', filename='')}}{{available_images[0]['url']}}" alt="Selected Logo"/>
             </div>
-
+            <br>
 
             <div class="row center-block">
               <label class="center-block text-center" for="description">Description de l'équipe</label>
@@ -72,7 +72,7 @@
       {% for team in available_teams %}
           <div class="col-lg-4 text-center slideanim">
               <div class="thumbnail">
-                <img src="team.image_url" alt="team_logo" width="400" height="300">
+                <img src="{{ team.image_url }}" alt="team_logo" width="400" height="300">
                 <p><strong>{{ team.name }}</strong> de {{ team.creator }}</p>
                 <p>{{ team.description }}</p>
                 <p>Membres :
