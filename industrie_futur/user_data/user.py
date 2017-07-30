@@ -26,7 +26,7 @@ class User():
             return False
 
     def create_user(self):
-        return self.db.add_user(self.email, self.password)
+        return self.db.add_user(self.email, self.password, self.form)
 
     def user_exists(self):
         try:

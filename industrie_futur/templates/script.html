@@ -76,4 +76,11 @@
         }
         // Enable map zooming with mouse scroll when the user clicks the map
     $('.map').on('click', onMapClickHandler);
+
+    function previewFilter(){
+    var preview = document.getElementById('preview-filter');
+    var mod = document.getElementById('sel1').value;
+
+    preview.src = mod;
+}
     </script>

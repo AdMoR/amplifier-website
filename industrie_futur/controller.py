@@ -11,7 +11,7 @@ from . import app
 
 
 from .user_data.user import User
-from .databases import RedisUserHandler
+from .databases import RedisUserHandler, UserAlreadyCreatedException
 from .user_data import MissingFieldException
 from .team_handling import Team, TeamHandler
 
@@ -69,6 +69,9 @@ def fill_form():
     except MissingFieldException:
         return render_template("fill_form.html",
                                error="Le formulaire n'a pas ete rempli correctement!"), 200
+    except UserAlreadyCreatedException:
+        return render_template("fill_form.html",
+                               success="Utilisateur deja enregistre!"), 200
 
 
 @api_v1.route("/login", methods=['GET'])
@@ -89,7 +92,7 @@ def login():
         login_user(user, remember=True)
         return render_template("login.html", success="Login reussi"), 200
     else:
-        return render_template("login.html", error="Email or mot de passe inccorect"), 200
+        return render_template("login.html", error="Email ou mot de passe inccorect"), 200
 
 
 @api_v1.route("/team", methods=['GET'])
@@ -122,7 +125,13 @@ def join_team():
 @api_v1.route("/create_team", methods=['GET'])
 @login_required
 def view_team_form():
-    return render_template("choose_your_team.html", create_team=True), 200
+    available_images = [{'name': "factory", 'url': "img/futur.jpg"},
+                        {'name': "welcome", 'url': "img/welcome.jpg"},
+                        {'name': "roudente", 'url': "img/roudente.jpg"},
+                        {'name': "futur", 'url': "img/futur.png"}]
+    return render_template("choose_your_team.html",
+                           available_images=available_images,
+                           create_team=True), 200
 
 
 @api_v1.route("/create_team", methods=['POST'])

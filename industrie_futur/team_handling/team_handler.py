@@ -27,7 +27,8 @@ class TeamHandler(object):
 
         teams_from_redis = self.redis.get('teams')
         if teams_from_redis is None:
-            self.all_teams = [Team("SuperTeam", "A massive thank you to all the AMAZING people!", "Jean Pol", "http://m.memegen.com/yuzypt.jpg")]
+            self.all_teams = [Team("SuperTeam", "A massive thank you to all the AMAZING people!",
+                                   "Jean Pol", "http://m.memegen.com/yuzypt.jpg")]
         else:
             self.all_teams = pickle.loads(teams_from_redis)
 
@@ -36,6 +37,7 @@ class TeamHandler(object):
 
     def create_team(self, name, description, creator, image_url):
         self.all_teams.append(Team(name, description, creator, image_url))
+        self.redis.set('teams', pickle.dumps(self.all_teams))
 
     def add_member_in_team_by_name(self, name, member_name):
         team = [t for t in self.all_teams if t.name == name]

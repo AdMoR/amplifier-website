@@ -1,1 +1,1 @@
-from .redis import Redis, RedisUserHandler
+from .redis import Redis, RedisUserHandler, UserAlreadyCreatedException

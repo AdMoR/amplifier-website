@@ -1,7 +1,11 @@
 {% extends "base.html" %}
 
 {% block header %}
-    {% include 'header_form.html' %}
+{% if success %}
+{% include 'header_team.html' %}
+{% else %}
+{% include 'header_form.html' %}
+{% endif %}
 {% endblock %}
 
 {% block content %}
@@ -26,7 +30,7 @@
     <!-- /.container -->
 
 
-<form>
+
    <fieldset class="col-centered col-sm-6">
   <legend class="text-center">Merci de remplir:</legend>
   <form role="form" action="{{url_for('website_industrie_futur.fill_form')}}" method="post" enctype="multipart/form-data">
@@ -64,7 +68,7 @@
               <label class="center-block text-center" for="interets">Des passions?</label>
               <textarea class="form-control" rows="2" id="interets" name="interets"></textarea>
 
-              <input type="submit" class="center-block btn btn-primary"></button>
+              <input type="submit" method="post" class="center-block btn btn-primary"></button>
             </div>
 
 
@@ -72,7 +76,7 @@
       </span>
     </form>
   </fieldset>
-</form>
+
 
 </section>
 

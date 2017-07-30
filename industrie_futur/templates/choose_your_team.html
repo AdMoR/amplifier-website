@@ -26,7 +26,8 @@
         <!-- /.container -->
     </section>
 
-  <label class="center-block text-center">Merci de remplir:</label>
+   <fieldset class="col-centered col-sm-6">
+  <legend class="text-center">Merci de remplir:</legend>
   <form role="form" action="{{url_for('website_industrie_futur.create_team')}}" method="post" enctype="multipart/form-data">
         <span class="form-group">
 
@@ -34,8 +35,15 @@
               <input class="center-block text-center" type="text" class="form-control" name="name" id="name" placeholder="Nom de l'équipe" />
             </div>
 
-            <div class="row">
-              <input class="center-block text-center" type="text" class="form-control" name="image_url" id="image_url" placeholder="lien vers une image" />
+            <label for="center-block text-center sel1">Select logo:</label>
+            <select class="form-control" id="sel1" name="logo" onchange="previewFilter()">
+                {% for image in available_images %}
+                <option class="form-control" value="{{image['url']}}">{{image['name']}}</option>
+                {% endfor %}
+            </select>
+
+            <div class="">
+                <img class="center-block text-center" style="max-width: 50%;" id="preview-filter" src="{{url_for('static', filename='')}}{{available_images[0]['url']}}" alt="Selected Logo"/>
             </div>
 
 
@@ -51,6 +59,7 @@
 
         </span>
   </form>
+  </fieldset>
 
     {% endif %}
 

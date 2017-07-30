@@ -7,6 +7,10 @@ import pickle
 import json
 
 
+class UserAlreadyCreatedException(Exception):
+    pass
+
+
 class Redis(AbstractDatabase):
 
     def __init__(self, host=None, port=None, namespace=None, expiration=86400):
@@ -54,7 +58,7 @@ class RedisUserHandler(StrictRedis):
     def add_user(self, email, password, form=None):
         ret_user = self.get_user(email)
         if ret_user is not None and len(ret_user) > 0:
-            raise Exception("User was already created")
+            raise UserAlreadyCreatedException("User was already created")
         self.hset(email, "password", password)
         if form:
             self.save_session(email, form)

@@ -55,7 +55,7 @@ sentry = Sentry(app, dsn=config.get('monitoring')['sentry_dsn'])
 # Attach Blueprints
 #
 from .controller import api_v1
-app.register_blueprint(api_v1)
+app.register_blueprint(api_v1, url_prefix="")
 
 
 LOG.info('Starting Server. Environment: %s', config.get('environment'))
