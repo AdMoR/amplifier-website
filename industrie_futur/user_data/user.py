@@ -2,7 +2,7 @@
 from __future__ import (absolute_import, division, print_function)
 from flask_login import UserMixin
 from .utils import UnknownUserError, CredentialsError, AccessError, get_logger
-
+from .. import LOG
 
 class User():
     __name__ = 'user'
@@ -21,8 +21,10 @@ class User():
         try:
             return self.user_exists()
         except CredentialsError:
+            LOG.debug("Bad credentials")
             return False
         except UnknownUserError:
+            LOG.debug("Unknown user")
             return False
 
     def create_user(self):
@@ -31,6 +33,7 @@ class User():
     def user_exists(self):
         try:
             user = self.db.get_user(self.email)
+            LOG.debug('user check', user)
         except AccessError:
             self.logger.debug('%s doesn\'t exists' % self.email)
             raise UnknownUserError('No such user')
@@ -62,7 +65,7 @@ class User():
         return False
 
     def get_id(self):
-        return unicode(self.email)
+        return str(self.email)
 
     def __str__(self):
         return '<User: %s session: %s>' % (self.email, self.session)
@@ -71,10 +74,12 @@ class User():
     def get(cls, cache, email):
         # Retrieve data from cache
         dict_user = cache.get_user(email)
+        print("Dict user : ", dict_user)
         if not dict_user:
             return None
         # regenerate user
         user = User(cache, dict_user.get('email'), dict_user.get('password'), dict_user.get('form'))
+        LOG.debug("The user recreated : ", user)
         if user.check_user() is True:
             user.form = cache.get_session(email)
             return user

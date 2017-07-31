@@ -84,8 +84,8 @@ def guest_login():
 def login():
     user = User(cache=redis_access,
                 email=request.form.get('email'),
-                password=request.form.get('password'))
-    LOG.debug(user)
+                password=request.form.get('password').encode('utf-8'))
+    LOG.debug('user is', user.__dict__)
     valid = user.check_user()
     print("Valid is {}".format(valid))
     if valid is True:
