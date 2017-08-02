@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block header %} {% include 'header_team.html' %} {% endblock %}
+
+{% block content %}
+
+    {% if error %}
+        <div class="alert alert-warning text-center" role="alert">{{error}}</div>
+    {% endif %}
+
+    {% if success %}
+        <div class="alert alert-success text-center" role="alert">{{success}}</div>
+    {% endif %}
+
+
+    <!-- Container (Portfolio Section) -->
+    <div id="join_team" class="center-block container-fluid text-center bg-grey">
+      <h2></h2><br>
+      <h4>Ton équipe</h4>
+        <div class="col-lg-6 text-center">
+              <div class="thumbnail">
+                <img src="{{ team.image_url }}" alt="team_logo" width="400" height="300">
+                <p><strong>{{ team.name }}</strong> de {{ team.creator }}</p>
+                <p>{{ team.description }}</p>
+                <p>Membres :
+                {% for member in team.members %}
+                    {{ member }}
+                {% endfor %}
+                </p>
+                <p>Candidats : <br>
+                {% for member in team.pending_members %}
+                    {{ member }}
+                    <form action="" method="post">
+                      <button name="team" class="btn btn-info" value="{{ member }}" role="button">
+                      Accepter dans l'équipe</button>
+                    </form>
+                {% endfor %}
+                </p>
+            </div>
+          </div>
+    </div><br>
+
+
+{% endblock %}

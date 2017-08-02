@@ -4,18 +4,18 @@ from flask_login import UserMixin
 from .utils import UnknownUserError, CredentialsError, AccessError, get_logger
 from .. import LOG
 
+
 class User():
     __name__ = 'user'
 
     def __init__(self, cache, email, password, form=None):
-        self.logger = get_logger(self.__name__)
+        #self.logger = get_logger(self.__name__)
         self.db = cache
         self.email = email
         self.password = password
         self.is_authenticated = False
-        self.session = None
         if form is not None:
-            self.form = form
+            self.form = dict(form)
 
     def check_user(self):
         try:
@@ -28,6 +28,7 @@ class User():
             return False
 
     def create_user(self):
+        #print("User created with : {} {} {}".format(self.email, self.password, self.form))
         return self.db.add_user(self.email, self.password, self.form)
 
     def user_exists(self):
@@ -35,7 +36,7 @@ class User():
             user = self.db.get_user(self.email)
             LOG.debug('user check', user)
         except AccessError:
-            self.logger.debug('%s doesn\'t exists' % self.email)
+            print("Access error")
             raise UnknownUserError('No such user')
         if not user:
             print("Unknown user")
@@ -74,12 +75,10 @@ class User():
     def get(cls, cache, email):
         # Retrieve data from cache
         dict_user = cache.get_user(email)
-        print("Dict user : ", dict_user)
         if not dict_user:
             return None
         # regenerate user
         user = User(cache, dict_user.get('email'), dict_user.get('password'), dict_user.get('form'))
-        LOG.debug("The user recreated : ", user)
         if user.check_user() is True:
             user.form = cache.get_session(email)
             return user

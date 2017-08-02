@@ -62,7 +62,7 @@ class RedisUserHandler(StrictRedis):
             raise UserAlreadyCreatedException("User was already created")
         self.hset(email, "password", password)
         if form:
-            self.save_session(email, form)
+            self.save_session(email, dict(form))
         return True
 
     def get_session(self, username):

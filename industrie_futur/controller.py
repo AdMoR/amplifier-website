@@ -65,7 +65,7 @@ def fill_form():
             LOG.info("User {} was logged in !".format(name))
             login_user(user, remember=True)
         return render_template("fill_form.html",
-                               success="Merci {}, votre compte a ete cree.".format(name)), 200
+                               success="Merci {}, votre compte a ete cree.".format(user.email)), 200
     except MissingFieldException:
         return render_template("fill_form.html",
                                error="Le formulaire n'a pas ete rempli correctement!"), 200
@@ -105,9 +105,11 @@ def team_choice():
 @login_required
 def view_team_list():
     available_teams = team_handler.get_incomplete_teams()
+    has_team = team_handler.get_user_team(current_user.email) is not None
     dict_formated_av_teams = [t._to_dict_() for t in available_teams]
     return render_template("choose_your_team.html", join_team=True,
-                           available_teams=dict_formated_av_teams), 200
+                           available_teams=dict_formated_av_teams, has_team=has_team), 200
+
 
 @api_v1.route("/join_team", methods=['POST'])
 @login_required
@@ -120,6 +122,34 @@ def join_team():
 
     # Render the normal view of team
     return view_team_list()
+
+
+@api_v1.route("/view_team", methods=['GET'])
+@login_required
+def view_team():
+    user_team = team_handler.get_user_team(current_user.email)
+    has_team = user_team is not None
+    if user_team is None:
+        return render_template("view_team.html", has_team=has_team,
+                               error="Tu ne dispose pas d'une équipe à gérer."), 200
+    else:
+        return render_template("view_team.html", has_team=has_team,
+                               team=user_team._to_dict_()), 200
+
+
+@api_v1.route("/view_team", methods=['POST'])
+@login_required
+def add_member_to_team():
+    user_team = team_handler.get_user_team(current_user.email)
+    if user_team is None:
+        return render_template("view_team.html",
+                               error="Erreur : impossible de retrouver l'équipe."), 200
+    else:
+        user_id = request.form["team"]
+        user_team.validate_member(user_id)
+        team_handler.save_teams()
+        return render_template("view_team.html",
+                               team=user_team._to_dict_()), 200
 
 
 @api_v1.route("/create_team", methods=['GET'])
@@ -149,8 +179,6 @@ def view_team_form():
 def create_team():
     sent_back_form = request.form
 
-    print('post ', request.__dict__)
-
     #try:
     name = sent_back_form.get('name')
     image_url = sent_back_form.get('logo')
@@ -158,12 +186,9 @@ def create_team():
 
     print(sent_back_form.__dict__)
 
-    creator_name = current_user.email
-
-    team_handler.create_team(name, description, creator_name, image_url)
+    team_handler.create_team(name, description, current_user.email, image_url)
 
     dict_formated_av_teams = [team_handler.all_teams[-1]._to_dict_()]
-    print(dict_formated_av_teams)
 
     return render_template("choose_your_team.html", join_team=True,
                            success="Equipe cree =)",
@@ -173,11 +198,6 @@ def create_team():
 @api_v1.route("/challenge", methods=['GET'])
 def view_challenge():
     return render_template("challenge.html"), 200
-
-
-    #except:
-    #    return render_template("choose_your_team.html", create_team=True,
-    #                           error="Une erreur est survenue"), 200
 
 
 @api_v1.route('/info', methods=['GET'])
@@ -199,8 +219,8 @@ def invite_user_to_slack(first_name, last_name, email, token):
 ######### Session ##############################################################
 @login_manager.user_loader
 def load_user(user_id):
-    LOG.debug(user_id)
-    return User.get(redis_access, user_id)
+    this_user = User.get(redis_access, user_id)
+    return this_user
 
 
 @login_manager.unauthorized_handler
