@@ -78,9 +78,16 @@
     $('.map').on('click', onMapClickHandler);
 
     function previewFilter(){
-    var preview = document.getElementById('preview-filter');
-    var mod = document.getElementById('sel1').value;
+        var preview = document.getElementById('preview-filter');
+        var mod = document.getElementById('sel1').value;
 
-    preview.src = mod;
-}
+        preview.src = mod;
+    }
+
+    function previewChoices(){
+        var preview = document.getElementById('choice');
+        var mod = document.getElementById('sel1').value;
+
+        preview.src = mod;
+    }
     </script>

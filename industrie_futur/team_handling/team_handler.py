@@ -72,6 +72,12 @@ class TeamHandler(object):
         self.all_teams.append(Team(name, description, creator, image_url))
         self.save_teams()
 
+    def delete_team(self, team):
+        print(team, team.__dict__, self.all_teams)
+        self.all_teams.remove(team)
+        print(self.all_teams)
+        self.save_teams()
+
     def add_member_in_team_by_name(self, name, member_name):
         '''
         Add a user to a team if the team exists and save to DB

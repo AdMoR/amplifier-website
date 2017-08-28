@@ -5,6 +5,7 @@ import json
 from flask import render_template, Blueprint, jsonify, request, send_from_directory, g
 from flask_login import login_user, logout_user, login_required, current_user
 from werkzeug.wrappers import Response
+from dateutil.parser import parse
 from config import Config as config
 from . import LOG, sentry, login_manager
 from . import app
@@ -12,7 +13,8 @@ from . import app
 
 from .user_data.user import User
 from .databases import RedisUserHandler, UserAlreadyCreatedException
-from .user_data import MissingFieldException
+from .user_data import MissingFieldException, InvalidEmailException, LowLengthPasswordException,\
+                       InvalidBirthdateException
 from .team_handling import Team, TeamHandler
 
 
@@ -46,6 +48,11 @@ def get_form():
     return render_template("fill_form.html"), 200
 
 
+@api_v1.route("/faq", methods=['GET'])
+def faq():
+    return render_template("FAQ.html"), 200
+
+
 @api_v1.route("/fillform", methods=['POST'])
 def fill_form():
     print(request.__dict__)
@@ -53,8 +60,36 @@ def fill_form():
     try:
         print(sent_back_form.__dict__)
         name = sent_back_form.get('name')
-        if name is None or name == '':
-            raise MissingFieldException
+        lastname = sent_back_form.get('lastname')
+        email = sent_back_form.get('email')
+        birthdate = sent_back_form.get('birthday')
+        password = sent_back_form.get('password')
+
+        print(name, lastname, email, birthdate, password)
+
+        if (name is None or name == '') or\
+           (lastname is None or lastname == '') or\
+           (email is None or email == '') or\
+           (password is None or password == '') or\
+           (birthdate is None or birthdate == ''):
+            raise MissingFieldException("Merci de remplir tous les champs.")
+
+        if '@' not in email:
+            raise InvalidEmailException
+
+        if len(password) < 6:
+            raise LowLengthPasswordException
+
+        if '/' not in birthdate:
+            raise InvalidBirthdateException
+        else:
+            try:
+                dt = parse(birthdate)
+                birthdate = dt.strftime('%d/%m/%y')
+            except ValueError:
+                raise InvalidBirthdateException
+
+
         user = User(cache=redis_access,
                     email=sent_back_form.get('email'),
                     password=sent_back_form.get('password'),
@@ -69,6 +104,15 @@ def fill_form():
     except MissingFieldException:
         return render_template("fill_form.html",
                                error="Le formulaire n'a pas ete rempli correctement!"), 200
+    except InvalidBirthdateException:
+        return render_template("fill_form.html",
+                               error="La date de naissance est erronée : le format est jj/mm/aaaa"), 200
+    except LowLengthPasswordException:
+        return render_template("fill_form.html",
+                               error="Le mot de passe doit faire au moins 6 caracteres"), 200
+    except InvalidEmailException:
+        return render_template("fill_form.html",
+                               error="L'adresse email est incorrecte !"), 200
     except UserAlreadyCreatedException:
         return render_template("fill_form.html",
                                success="Utilisateur deja enregistre!"), 200
@@ -76,8 +120,18 @@ def fill_form():
 
 @api_v1.route("/login", methods=['GET'])
 def guest_login():
-    LOG.debug(current_user)
-    return render_template("login.html"), 200
+    LOG.debug(type(current_user))
+    try:
+        valid = current_user.check_user()
+        print("Valid is {}".format(valid))
+        has_team = team_handler.get_user_team(current_user.email) is not None
+        if valid is True:
+            login_user(current_user, remember=True)
+            return render_template("login.html", success="Deja authentifie", has_team=has_team), 200
+        else:
+            return render_template("login.html"), 200
+    except AttributeError:
+        return render_template("login.html"), 200
 
 
 @api_v1.route("/login", methods=['POST'])
@@ -130,8 +184,8 @@ def view_team():
     user_team = team_handler.get_user_team(current_user.email)
     has_team = user_team is not None
     if user_team is None:
-        return render_template("view_team.html", has_team=has_team,
-                               error="Tu ne dispose pas d'une équipe à gérer."), 200
+        return render_template("choose_your_team.html", has_team=has_team,
+                               error="Tu ne dispose pas d'une equipe a gerer."), 200
     else:
         return render_template("view_team.html", has_team=has_team,
                                team=user_team._to_dict_()), 200
@@ -191,13 +245,46 @@ def create_team():
     dict_formated_av_teams = [team_handler.all_teams[-1]._to_dict_()]
 
     return render_template("choose_your_team.html", join_team=True,
+                           has_team=True,
                            success="Equipe cree =)",
                            available_teams=dict_formated_av_teams), 200
+
+
+@api_v1.route("/delete_team", methods=['POST'])
+@login_required
+def delete_team():
+    user_team = team_handler.get_user_team(current_user.email)
+    if user_team is None:
+        return render_template("view_team.html",
+                               error="Erreur : impossible de retrouver l'equipe."), 200
+    else:
+        team_handler.delete_team(user_team)
+        return render_template("choose_your_team.html"), 200
+
+
+@api_v1.route("/update_team", methods=['POST'])
+@login_required
+def update_team():
+    user_team = team_handler.get_user_team(current_user.email)
+    if user_team is None:
+        return render_template("view_team.html",
+                               error="Erreur : impossible de retrouver l'equipe."), 200
+    else:
+        description = request.form.get('description')
+        user_team.description = description
+        team_handler.save_teams()
+        return render_template("view_team.html",
+                               team=user_team._to_dict_()), 200
 
 
 @api_v1.route("/challenge", methods=['GET'])
 def view_challenge():
     return render_template("challenge.html"), 200
+
+
+@api_v1.route("/slack", methods=['GET'])
+def slack_info():
+    return render_template("slack.html"), 200
 
 
 @api_v1.route('/info', methods=['GET'])
@@ -207,6 +294,38 @@ def info():
                            'status_message': 'everything is cool'}
 
     return jsonify(response), code
+
+
+@api_v1.route('/admin', methods=['GET'])
+def admin_info():
+    available_actions = ['Visualize member', 'Stats']
+    available_choices = {'Visualize member': redis_access.get_user_list(),
+                         'Stats': []}
+    print(available_choices)
+    return render_template("admin.html",
+                           available_actions=available_actions,
+                           available_choices=available_choices,
+                           view_option=True), 200
+
+
+@api_v1.route('/admin', methods=['POST'])
+def retrieve_admin_info():
+
+    sent_back_form = request.form
+    action = sent_back_form.get('action')
+
+    if action == 'Visualize member':
+        member_email = sent_back_form.get('choice')
+        print('email', member_email)
+        data = User.get(redis_access, member_email)
+        available_results = [data.__dict__]
+        print('available result : ', available_results)
+
+        return render_template("admin.html",
+                               see_result=True,
+                               available_results=available_results), 200
+    else:
+        return admin_info()
 
 
 ######### Helper #############################

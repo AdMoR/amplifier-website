@@ -16,8 +16,8 @@
     <!-- Container (Portfolio Section) -->
     <div id="join_team" class="center-block container-fluid text-center bg-grey">
       <h2></h2><br>
-      <h4>Ton équipe</h4>
-        <div class="col-lg-6 text-center">
+      <h3>Ton équipe</h3>
+        <div class="col-lg-6 center-block text-center">
               <div class="thumbnail">
                 <img src="{{ team.image_url }}" alt="team_logo" width="400" height="300">
                 <p><strong>{{ team.name }}</strong> de {{ team.creator }}</p>
@@ -38,6 +38,29 @@
                 </p>
             </div>
           </div>
+
+        <div class="col-lg-6 center-block text-center">
+            <h5> Changer la description de l'équipe </h5>
+            <form role="form" action="{{url_for('website_industrie_futur.update_team')}}" method="post" enctype="multipart/form-data">
+                <span class="form-group center-block ">
+
+                    <div class="row center-block">
+                      <textarea class="form-control text-center" rows="2" id="description" name="description"></textarea>
+                    </div>
+
+                    <div class="row">
+                      <input type="submit" class="center-block btn btn-info"></button>
+                    </div>
+
+                </span>
+            </form>
+
+            <form action="{{url_for('website_industrie_futur.delete_team')}}" method="POST">
+                <button name="team" class="btn btn-info" value="{{ member }}" role="button">
+                Supprimer l'équipe</button>
+            </form>
+
+        </div>
     </div><br>
 
 

@@ -43,3 +43,15 @@ class SessionError(UserError):
 
 class CredentialsError(UserError):
     pass
+
+
+class InvalidEmailException(UserError):
+    pass
+
+
+class LowLengthPasswordException(UserError):
+    pass
+
+
+class InvalidBirthdateException(UserError):
+    pass

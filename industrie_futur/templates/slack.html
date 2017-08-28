@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block header %} {% include 'header_contenu.html' %} {% endblock %}
+
+{% block content %}
+
+    <!-- About -->
+    <aside class="futur">
+        <div class="text-center" id="content">
+            <h1>Slack : la plateforme du challenge</h1>
+        </div>
+    </aside>
+
+    <section class="success" id="about">
+        <div class="container">
+
+            <div class="center-block col-lg-12 text-center">
+                <h2>Comment utiliser SLack ?</h2>
+                <hr class="star-light">
+            </div>
+
+            <div class="center-block col-lg-6 ">
+                <p>Avec l'inscription, une invitation à Slack est automatiquement envoyée.</p>
+                <p>Il suffit de suivre le lien pour s'inscrire et rejoindre la plateforme de participation.</p>
+            </div>
+
+            <div class="center-block col-lg-6">
+                <p>Une fiche d'aide est disponible pour connaitre tous les détails de cet outil</p>
+                <p>Les formalités du challenge seront aussi détaillées dans ce document.</p>
+            </div>
+
+
+                <div class="col-lg-12 center-block text-center">
+                    <a href="/img/futur.jpg" download class="btn btn-lg btn-outline">
+                        <i class="fa fa-download"></i> Télécharger le FAQ Slack
+                    </a>
+                </div>
+
+        </div>
+    </section>
+
+
+
+{% endblock %}

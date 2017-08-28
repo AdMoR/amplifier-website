@@ -65,6 +65,11 @@ class RedisUserHandler(StrictRedis):
             self.save_session(email, dict(form))
         return True
 
+    def get_user_list(self):
+        all_keys = self.keys()
+        users = [k for k in all_keys if '@' in k]
+        return users
+
     def get_session(self, username):
         pick = self.hget(username, "session")
         if pick is not None:
