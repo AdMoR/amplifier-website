@@ -283,6 +283,11 @@ def view_challenge():
     return render_template("challenge.html"), 200
 
 
+@api_v1.route("/alliance", methods=['GET'])
+def view_alliance():
+    return render_template("alliance.html"), 200
+
+
 @api_v1.route("/slack", methods=['GET'])
 def slack_info():
     return render_template("slack.html"), 200
