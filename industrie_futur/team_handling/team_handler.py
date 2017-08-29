@@ -20,14 +20,16 @@ class Team(object):
         '''
         After validation from the creator, a user can then be a member of the team
         '''
-        self.members.append(user_id)
+        if user_id not in self.members:
+            self.members.append(user_id)
         self.pending_members.remove(user_id)
 
     def add_member(self, user_id):
         '''
         Add a member to the pending list that must be verified by the user
         '''
-        self.pending_members.append(user_id)
+        if user_id not in self.pending_members and user_id not in self.members:
+            self.pending_members.append(user_id)
 
     def is_complete(self):
         return len(self.members) > 2

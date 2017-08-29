@@ -157,11 +157,12 @@ def team_choice():
 
 @api_v1.route("/join_team", methods=['GET'])
 @login_required
-def view_team_list():
+def view_team_list(success=None):
     available_teams = team_handler.get_incomplete_teams()
     has_team = team_handler.get_user_team(current_user.email) is not None
     dict_formated_av_teams = [t._to_dict_() for t in available_teams]
     return render_template("choose_your_team.html", join_team=True,
+                           success=success,
                            available_teams=dict_formated_av_teams, has_team=has_team), 200
 
 
@@ -175,7 +176,7 @@ def join_team():
     team_handler.add_member_in_team_by_name(team_id, current_user.email)
 
     # Render the normal view of team
-    return view_team_list()
+    return view_team_list(success="Candidature envoyee au gestionnaire de l'equipe")
 
 
 @api_v1.route("/view_team", methods=['GET'])
