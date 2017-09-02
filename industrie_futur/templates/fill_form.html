@@ -29,7 +29,7 @@
     </div>
     <!-- /.container -->
 
-
+  <img class="img-portfolio img-responsive" src="img/fillform.png" width="150px">
 
    <fieldset class="col-centered col-sm-6">
   <legend class="text-center">Merci de remplir:</legend>
@@ -37,6 +37,7 @@
         <span class="form-group">
 
             <div class="text-center">
+            <label class="center-block text-center" for="sel1"><i class="glyphicon glyphicon-sunglasses"></i> A propos de toi:</label>
             <input class="center-block text-center" type="text" class="form-control" name="name" id="name" placeholder="Prénom" />
 
             <input class="center-block text-center" type="text" class="form-control" name="lastname" id="lastname" placeholder="Nom" />
@@ -47,9 +48,10 @@
 
             <input type="text" class="center-block text-center" name="birthday" id="birthday" placeholder="Date de naissance" />
             </div>
+            <br>
 
             <div>
-            <label class="center-block text-center" for="sel1">Merci de sélectionner:</label>
+            <label class="center-block text-center" for="sel1"><i class="glyphicon glyphicon-pushpin"></i> Que fais tu dans la vie ?</label>
             </div>
 
             <div class="center-block text-center">
@@ -59,13 +61,17 @@
                 <option class="form-control text-center" value="etu_bts">Etudiant BTS/IUT</option>
                 <option class="form-control text-center" value="diplomé">Diplomé</option>
             </select>
+
+            <label class="center-block text-center" for="sel1">Nom de ton établiseement:</label>
+            <input type="text" class="center-block text-center" name="school" id="school" placeholder="Etablissement" />
             </div>
+            <br>
 
             <div class="row col-centered">
-              <label class="center-block text-center" for="comment">Qu'est ce qui t'a motivé à t'inscrire:</label>
+              <label class="center-block text-center" for="comment"><i class="glyphicon glyphicon-heart"></i>Qu'est ce qui t'a motivé à t'inscrire:</label>
               <textarea class="form-control" rows="3" id="comment" name="comment"></textarea>
 
-              <label class="center-block text-center" for="interets">Des passions?</label>
+              <label class="center-block text-center" for="interets"> <i class="glyphicon glyphicon-bishop"></i>Des passions?</label>
               <textarea class="form-control" rows="2" id="interets" name="interets"></textarea>
 
               <input type="submit" method="post" class="center-block btn btn-primary"></button>

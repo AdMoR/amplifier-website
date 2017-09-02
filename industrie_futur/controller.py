@@ -292,6 +292,10 @@ def view_alliance():
 def slack_info():
     return render_template("slack.html"), 200
 
+@api_v1.route("/orga", methods=['GET'])
+def organisation():
+    return render_template("orga.html"), 200
+
 
 @api_v1.route('/info', methods=['GET'])
 def info():
