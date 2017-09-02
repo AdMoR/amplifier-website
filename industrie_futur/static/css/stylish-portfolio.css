@@ -16,6 +16,16 @@ body {
     font-family: "Source Sans Pro","Helvetica Neue",Helvetica,Arial,sans-serif;
 }
 
+
+.sred {
+  background-color: #f74c3a
+}
+
+.text-red {
+  background-color: rgb(247,76,58)
+}
+
+
 .text-vertical-center {
     display: table-cell;
     text-align: center;
