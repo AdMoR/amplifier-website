@@ -89,16 +89,13 @@ def fill_form():
             except ValueError:
                 raise InvalidBirthdateException
 
-
         user = User(cache=redis_access,
                     email=sent_back_form.get('email'),
                     password=sent_back_form.get('password'),
                     form=sent_back_form)
         user.create_user()
-        valid = user.check_user()
-        if valid is True:
-            LOG.info("User {} was logged in !".format(name))
-            login_user(user, remember=True)
+        login_user(user, remember=True)
+
         return render_template("fill_form.html",
                                success="Merci {}, votre compte a ete cree.".format(user.email)), 200
     except MissingFieldException:
