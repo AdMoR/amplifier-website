@@ -9,7 +9,7 @@ from dateutil.parser import parse
 from config import Config as config
 from . import LOG, sentry, login_manager
 from . import app
-
+import requests
 
 from .user_data.user import User
 from .databases import RedisUserHandler, UserAlreadyCreatedException
@@ -111,6 +111,9 @@ def fill_form():
                     form=sent_back_form)
         user.create_user()
         login_user(user, remember=True)
+
+        invite_user_to_slack(first_name=name, last_name=lastname,
+                             email=email, token="xoxp-236521632214-235101698929-235633341042-1a5072885e07678a9a13b7be63e994da")
 
         return render_template("fill_form.html",
                                success="Merci {}, votre compte a ete cree.".format(user.email)), 200
@@ -354,8 +357,8 @@ def retrieve_admin_info():
 ######### Helper #############################
 
 def invite_user_to_slack(first_name, last_name, email, token):
-    url = "https://slack.com/api/users.admin.invite?token={}&email={}&channels=C000000001,C000000002&first_name={}&last_name={}"
-    return url.format(token, email, first_name, last_name)
+    url = "https://slack.com/api/users.admin.invite?token={}&email={}&first_name={}&last_name={}"
+    response = requests.post(url.format(token, email, first_name, last_name))
 
 
 ######### Session ##############################################################
