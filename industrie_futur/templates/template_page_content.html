@@ -7,38 +7,12 @@
     <!-- About -->
     <aside class="futur">
         <div class="text-center" id="content">
-            <h1>L'industrie 4.0</h1>
+            <h1>{{ title }}</h1>
         </div>
     </aside>
 
-    <section class="success" id="about">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12 text-center">
-                    <h2>Présentation</h2>
-                    <hr class="star-light">
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-lg-4 col-lg-offset-2">
-                    <p>Le concept d’Industrie 4.0 correspond à une nouvelle façon d’organiser les moyens de production : l’objectif est la mise en place d’usines dites « intelligentes » (« smart factories ») capables d’une plus grande adaptabilité dans la production et d’une allocation plus efficace des ressources, ouvrant ainsi la voie à une nouvelle révolution industrielle. Ses bases technologiques sont l'Internet des objets et les systèmes cyber-physiques.</p>
-                    <p>La nouvelle révolution serait fondée sur l'usine intelligente, caractérisée par une interconnexion des machines et des systèmes au sein des sites de production mais aussi entre eux et l’extérieur (clients, partenaires, autres sites de productions). Le concept a été mis en évidence pour la première fois lors la foire de Hanovre (salon de la technologie industrielle) de 2011. En 2013, un rapport décrivant le concept a été présenté par un groupe de travail transdisciplinaire à la foire de Hanovre</p>
-                </div>
-                <div class="col-lg-4">
-                    <p>L'Industrie 4.0 est l'un des projets clés de la stratégie concernant les hautes technologies du gouvernement allemand, qui encourage la révolution numérique des industries.</p>
-                    <p>En France, les sociétés comme Fives, Schneider Electric, Dassault Systèmes, Airbus Group, Bosch Rexroth, SNCF7, sont très impliquées dans le développement de l'usine 4.0.
-                    </p>
-                    <p>En juillet 2015, l'Alliance Industrie du Futur a été créée à l'initiative de 11 organisations professionnelles de l’industrie et du numérique, établissements académiques (Arts et Métiers ParisTech, Institut Mines-Télécom) et technologiques (CEA, CETIM) afin de fédérer les initiatives de modernisation et de transformation de l'industrie en France.</p>
-                </div>
-                <div class="col-lg-8 col-lg-offset-2 text-center">
-                    <a href="/img/futur.jpg" download class="btn btn-lg btn-outline">
-                        <i class="fa fa-download"></i> Télécharger le document
-                    </a>
-                </div>
-            </div>
-        </div>
-    </section>
-
-<img class="img-portfolio img-responsive" src="img/cybersecu.png" width="100%">
+{% for index in indexes %}
+<img class="img-portfolio img-responsive" src="img/slides/Diapositive{{ index }}.jpg" width="100%">
+{% endfor %}
 
 {% endblock %}

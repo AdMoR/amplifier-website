@@ -38,9 +38,25 @@ def main():
     return render_template("home_factored.html"), 200
 
 
-@api_v1.route("/test", methods=['GET'])
-def test():
-    return render_template("template_page_content.html"), 200
+@api_v1.route("/t1", methods=['GET'])
+def t1():
+    return render_template("template_page_content.html",
+                           title="Organisation et management dans l’industrie du futur",
+                           indexes=["03", "05", "07", "09"]), 200
+
+
+@api_v1.route("/t2", methods=['GET'])
+def t2():
+    return render_template("template_page_content.html",
+                           title="Comment garantir l’employabilité des professionnels?",
+                           indexes=["10", "12", "14", "16"]), 200
+
+
+@api_v1.route("/t3", methods=['GET'])
+def t3():
+    return render_template("template_page_content.html",
+                           title="Des structures et moyens pour accompagner",
+                           indexes=["17", "19", "21", "23"]), 200
 
 
 @api_v1.route("/fillform", methods=['GET'])
