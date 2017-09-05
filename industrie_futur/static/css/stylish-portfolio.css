@@ -17,8 +17,13 @@ body {
 }
 
 
+.btn-primary, .btn-primary:hover, .btn-primary:active, .btn-primary:visited {
+    background-color: #ed7165 !important;
+    border-color: #ed7165;
+}
+
 .sred {
-  background-color: #f74c3a
+  background-color: #ed7165
 }
 
 .text-red {
