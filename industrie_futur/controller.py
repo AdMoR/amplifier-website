@@ -79,16 +79,16 @@ def fill_form():
         name = sent_back_form.get('name')
         lastname = sent_back_form.get('lastname')
         email = sent_back_form.get('email')
-        birthdate = sent_back_form.get('birthday')
+        age = sent_back_form.get('age')
         password = sent_back_form.get('password')
 
-        print(name, lastname, email, birthdate, password)
+        print(name, lastname, email, age, password)
 
         if (name is None or name == '') or\
            (lastname is None or lastname == '') or\
            (email is None or email == '') or\
            (password is None or password == '') or\
-           (birthdate is None or birthdate == ''):
+           (age is None or age == ''):
             raise MissingFieldException("Merci de remplir tous les champs.")
 
         if '@' not in email:
@@ -97,14 +97,14 @@ def fill_form():
         if len(password) < 6:
             raise LowLengthPasswordException
 
-        if '/' not in birthdate:
-            raise InvalidBirthdateException
-        else:
-            try:
-                dt = parse(birthdate)
-                birthdate = dt.strftime('%d/%m/%y')
-            except ValueError:
-                raise InvalidBirthdateException
+        #if '/' not in birthdate:
+        #    raise InvalidBirthdateException
+        #else:
+        #    try:
+        #        dt = parse(birthdate)
+        #        birthdate = dt.strftime('%d/%m/%y')
+        #    except ValueError:
+        #        raise InvalidBirthdateException
 
         user = User(cache=redis_access,
                     email=sent_back_form.get('email'),
@@ -114,7 +114,7 @@ def fill_form():
         login_user(user, remember=True)
 
         invite_user_to_slack(first_name=name, last_name=lastname,
-                             email=email, token="xoxp-236521632214-235101698929-235633341042-1a5072885e07678a9a13b7be63e994da")
+                             email=email, token=config.get('slack-invite-token'))
 
         return render_template("fill_form.html",
                                success="Merci {}, votre compte a ete cree.".format(user.email)), 200
