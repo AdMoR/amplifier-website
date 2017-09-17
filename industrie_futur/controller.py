@@ -323,7 +323,7 @@ def info():
     return jsonify(response), code
 
 
-@api_v1.route('/admin', methods=['GET'])
+@api_v1.route('/79f4b714fb0a195e35613323cd1b0c1a', methods=['GET'])
 def admin_info():
     available_actions = ['Visualize member']
     available_choices = {'Visualize member': redis_access.get_user_list(),
@@ -335,7 +335,7 @@ def admin_info():
                            view_option=True), 200
 
 
-@api_v1.route('/admin', methods=['POST'])
+@api_v1.route('/79f4b714fb0a195e35613323cd1b0c1a', methods=['POST'])
 def retrieve_admin_info():
 
     sent_back_form = request.form
