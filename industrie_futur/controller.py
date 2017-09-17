@@ -342,10 +342,13 @@ def retrieve_admin_info():
     action = sent_back_form.get('action')
 
     if action == 'Visualize member':
-        member_email = sent_back_form.get('choice')
-        print('email', member_email)
-        data = User.get(redis_access, member_email)
-        available_results = [data.__dict__]
+        #member_email = sent_back_form.get('choice')
+        #print('email', member_email)
+        #data = User.get(redis_access, member_email)
+        available_results = []
+        for email in redis_access.get_user_list():
+            session = redis_access.get_session(email)
+            available_results.append(session.__dict__)
         print('available result : ', available_results)
 
         return render_template("admin.html",

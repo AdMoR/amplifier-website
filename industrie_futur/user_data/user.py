@@ -75,6 +75,7 @@ class User():
     def get(cls, cache, email):
         # Retrieve data from cache
         dict_user = cache.get_user(email)
+        print(dict_user)
         if not dict_user:
             return None
         # regenerate user
