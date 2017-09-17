@@ -236,10 +236,10 @@ def view_team_form():
                         {'name': "abstrait", 'url': "img/motards.jpg"},
                         {'name': "futurisme", 'url': "img/futurisme.jpg"},
                         {'name': "robot", 'url': "img/dance robot.gif"},
-                        {'name': "revolution", 'url': "img/RI_old.png"},
-                        {'name': "abstrait", 'url': "img/motards.jpg"},
-                        {'name': "futurisme", 'url': "img/futurisme.jpg"},
-                        {'name': "actual frankfurt", 'url': "img/modern_frankfurt.jpg"}
+                        {'name': "touch robot", 'url': "img/robot_touch.gif"},
+                        {'name': "fabric", 'url': "img/fabric.jpg"},
+                        {'name': "manufacture", 'url': "img/usine.jpg"},
+                        {'name': "science power", 'url': "img/science.jpg"}
                         ]
     return render_template("choose_your_team.html",
                            available_images=available_images,
@@ -325,7 +325,7 @@ def info():
 
 @api_v1.route('/admin', methods=['GET'])
 def admin_info():
-    available_actions = ['Visualize member', 'Stats']
+    available_actions = ['Visualize member']
     available_choices = {'Visualize member': redis_access.get_user_list(),
                          'Stats': []}
     print(available_choices)

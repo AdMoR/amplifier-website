@@ -67,7 +67,7 @@ class RedisUserHandler(StrictRedis):
 
     def get_user_list(self):
         all_keys = self.keys()
-        users = [k for k in all_keys if '@' in k]
+        users = [k for k in all_keys if b'@' in k]
         return users
 
     def get_session(self, username):
