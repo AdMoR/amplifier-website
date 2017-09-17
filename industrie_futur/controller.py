@@ -237,9 +237,9 @@ def view_team_form():
                         {'name': "futurisme", 'url': "img/futurisme.jpg"},
                         {'name': "robot", 'url': "img/dance robot.gif"},
                         {'name': "touch robot", 'url': "img/robot_touch.gif"},
-                        {'name': "fabric", 'url': "img/fabric.jpg"},
-                        {'name': "manufacture", 'url': "img/usine.jpg"},
-                        {'name': "science power", 'url': "img/science.jpg"}
+                        {'name': "fabric", 'url': "img/fabric.gif"},
+                        {'name': "manufacture", 'url': "img/usine.gif"},
+                        {'name': "science power", 'url': "img/science.gif"}
                         ]
     return render_template("choose_your_team.html",
                            available_images=available_images,
