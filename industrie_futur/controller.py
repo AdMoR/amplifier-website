@@ -10,7 +10,7 @@ from config import Config as config
 from . import LOG, sentry, login_manager
 from . import app
 import requests
-
+import pickle
 from .user_data.user import User
 from .databases import RedisUserHandler, UserAlreadyCreatedException
 from .user_data import MissingFieldException, InvalidEmailException, LowLengthPasswordException,\
@@ -347,8 +347,8 @@ def retrieve_admin_info():
         #data = User.get(redis_access, member_email)
         available_results = []
         for email in redis_access.get_user_list():
-            session = redis_access.get_session(email)
-            available_results.append(session.__dict__)
+            session = pickle.loads(redis_access.hget(email, "session"))
+            available_results.append(session)
         print('available result : ', available_results)
 
         return render_template("admin.html",
