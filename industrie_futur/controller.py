@@ -363,6 +363,7 @@ def retrieve_admin_info():
 def invite_user_to_slack(first_name, last_name, email, token):
     url = "https://slack.com/api/users.admin.invite?token={}&email={}&first_name={}&last_name={}"
     response = requests.post(url.format(token, email, first_name, last_name))
+    return response.text
 
 
 ######### Session ##############################################################
