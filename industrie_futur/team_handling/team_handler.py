@@ -32,7 +32,7 @@ class Team(object):
             self.pending_members.append(user_id)
 
     def is_complete(self):
-        return len(self.members) > 2
+        return len(self.members) > 3
 
     def _to_dict_(self):
         str_dict = self.__dict__
@@ -89,7 +89,7 @@ class TeamHandler(object):
             if team.name == name:
                 team.add_member(member_name)
                 self.save_teams()
-                break
+                return team.creator
 
     def get_user_team(self, user_id):
         '''

@@ -190,7 +190,10 @@ def join_team():
     # The post button will give the selected team id
     team_id = request.form["team"]
     # We assign the current user to the team
-    team_handler.add_member_in_team_by_name(team_id, current_user.email)
+    team_creator = team_handler.add_member_in_team_by_name(team_id, current_user.email)
+    requests.post(url=config.get('helpbot_warning_url'),
+                  data=json.dumps({"email": team_creator}),
+                  headers={"Content-Type": "application/json"})
 
     # Render the normal view of team
     return view_team_list(success="Candidature envoyee au gestionnaire de l'equipe")
