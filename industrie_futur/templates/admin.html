@@ -13,7 +13,6 @@
     {% endif %}
 
 
-
     {% if view_option %}
 
     <section id="content" class="about">
@@ -60,8 +59,11 @@
     {% if see_result %}
 
     <section id="content" class="about">
+
     <!-- Container (Portfolio Section) -->
     <div id="join_team" class="container-fluid center-block text-center bg-grey">
+        <p> Total inscrits : {{ num_results }} </p>
+        <p> List établissement : {{ schools }} </p>
       <h4></h4><br>
       {% for result in available_results %}
           <div class="col-lg-12 text-center center-block">
@@ -86,6 +88,10 @@
                 <p>
                 <h4>Section :</h4>
                 {{ result['filter'][0] }}
+                </p>
+                <p>
+                <h4>Etablissement :</h4>
+                {{ result['school'] }}
                 </p>
                 <p>
                 <h4>Interets :</h4>

@@ -349,13 +349,18 @@ def retrieve_admin_info():
         #print('email', member_email)
         #data = User.get(redis_access, member_email)
         available_results = []
+        schools = []
         for email in redis_access.get_user_list():
             session = pickle.loads(redis_access.hget(email, "session"))
             available_results.append(session)
+            if 'school' in session.keys():
+                schools.append(session['school'][0])
         print('available result : ', available_results)
 
         return render_template("admin.html",
                                see_result=True,
+                               num_results=len(available_results),
+                               schools=set(schools),
                                available_results=available_results), 200
     else:
         return admin_info()
