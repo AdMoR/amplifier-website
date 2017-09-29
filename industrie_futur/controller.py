@@ -97,15 +97,6 @@ def fill_form():
         if len(password) < 6:
             raise LowLengthPasswordException
 
-        #if '/' not in birthdate:
-        #    raise InvalidBirthdateException
-        #else:
-        #    try:
-        #        dt = parse(birthdate)
-        #        birthdate = dt.strftime('%d/%m/%y')
-        #    except ValueError:
-        #        raise InvalidBirthdateException
-
         user = User(cache=redis_access,
                     email=sent_back_form.get('email'),
                     password=sent_back_form.get('password'),
