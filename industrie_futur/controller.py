@@ -368,7 +368,7 @@ def view_missing_emails():
 
     users_on_site = redis_access.get_user_list()
     missing_emails = [m for m in users_on_site if m not in email_list]
-    print(missing_emails)
+    print(missing_emails, len(users_on_site), len(email_list))
 
     # Render the normal view of team
     return render_template("invite.html",
