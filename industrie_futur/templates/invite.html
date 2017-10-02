@@ -11,13 +11,32 @@
         </div>
     </aside>
 
-    <section class="success" id="about">
+    {% if missing_emails %}
+    <section class="success" id="missing">
+        Missing emails
         <div class="container">
             {% for email in missing_emails %}
                 <p> {{ email }} </p>
             {% endfor %}
         </div>
+
+        <form action="" method="post">
+            <button name="team" class="btn btn-info" value="email" role="button">
+                      Réinviter les emails de la liste</button>
+        </form>
     </section>
+    {% endif %}
+
+    {% if success %}
+    <section class="success" id="success">
+
+        <div class="container">
+            {% for email in success %}
+                <p> {{ email }} </p>
+            {% endfor %}
+        </div>
+    </section>
+    {% endif %}
 
 
 

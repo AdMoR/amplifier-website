@@ -379,6 +379,32 @@ def view_missing_emails():
                            missing_emails=missing_emails), 200
 
 
+@api_v1.route("/invite_all", methods=['POST'])
+def reinvite_missing_emails():
+
+    response = requests.get(url=config.get('helpbot_email_list'),
+                            headers={"Content-Type": "application/json"})
+    email_list = json.loads(response.text)['email_list']
+    email_list = [m for m in email_list]
+
+    users_on_site = redis_access.get_user_list()
+    users_on_site = [m.decode('utf-8') for m in users_on_site]
+    missing_emails = [m for m in users_on_site if m not in email_list]
+    print(missing_emails, len(users_on_site), len(email_list))
+
+    # Missed users
+    success = []
+    for email in missing_emails:
+        user = redis_access.get_user(email)
+        first_name, last_name = user['form']['name'][0], user['form']['lastname'][0]
+        resp = invite_user_to_slack(first_name, last_name, email, config.get('slack-invite-token'))
+        if resp.get('ok'):
+            success.append(email)
+
+    return render_template("invite.html",
+                           success=success), 200
+
+
 ######### Helper #############################
 
 def invite_user_to_slack(first_name, last_name, email, token):
