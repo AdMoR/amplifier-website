@@ -360,7 +360,6 @@ def retrieve_admin_info():
 
 
 @api_v1.route("/invite_all", methods=['GET'])
-@login_required
 def view_missing_emails():
 
     response = requests.get(url=config.get('helpbot_email_list'),
