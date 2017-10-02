@@ -359,6 +359,23 @@ def retrieve_admin_info():
         return admin_info()
 
 
+@api_v1.route("/invite_all", methods=['GET'])
+@login_required
+def view_missing_emails():
+
+    response = requests.get(url=config.get('helpbot_email_list'),
+                            headers={"Content-Type": "application/json"})
+    email_list = json.loads(response.text)['email_list']
+
+    users_on_site = redis_access.get_user_list()
+    missing_emails = [m for m in users_on_site if m not in email_list]
+    print(missing_emails)
+
+    # Render the normal view of team
+    return render_template("invite.html",
+                           missing_emails=missing_emails), 200
+
+
 ######### Helper #############################
 
 def invite_user_to_slack(first_name, last_name, email, token):

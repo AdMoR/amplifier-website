@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block header %} {% include 'header_contenu.html' %} {% endblock %}
+
+{% block content %}
+
+    <!-- About -->
+    <aside class="futur">
+        <div class="text-center" id="content">
+            <h1>Invite missing users</h1>
+        </div>
+    </aside>
+
+    <section class="success" id="about">
+        <div class="container">
+            {% for email in missing_emails %}
+                <p> {{ email }} </p>
+            {% endfor %}
+        </div>
+    </section>
+
+
+
+{% endblock %}
