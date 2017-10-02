@@ -365,12 +365,12 @@ def view_missing_emails():
     response = requests.get(url=config.get('helpbot_email_list'),
                             headers={"Content-Type": "application/json"})
     email_list = json.loads(response.text)['email_list']
-    email_list = [m.encode('utf-8') for m in email_list]
+    email_list = [m for m in email_list]
 
     print(email_list)
 
     users_on_site = redis_access.get_user_list()
-    users_on_site = [m.encode('utf-8') for m in users_on_site]
+    users_on_site = [m.decode('utf-8') for m in users_on_site]
     missing_emails = [m for m in users_on_site if m not in email_list]
     print(missing_emails, len(users_on_site), len(email_list))
 
