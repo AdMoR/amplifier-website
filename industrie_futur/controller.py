@@ -397,7 +397,7 @@ def reinvite_missing_emails():
     for email in missing_emails:
         user = redis_access.get_user(email)
         first_name, last_name = user['form']['name'][0], user['form']['lastname'][0]
-        resp = invite_user_to_slack(first_name, last_name, email, config.get('slack-invite-token'))
+        #resp = invite_user_to_slack(first_name, last_name, email, config.get('slack-invite-token'))
         if resp.get('ok'):
             success.append(email)
 
