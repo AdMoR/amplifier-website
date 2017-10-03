@@ -17,7 +17,7 @@ class ThemeSelector(object):
         """
 
         # 1 : give everyne what they want
-        repartitions = {t: prefs for t, prefs in self.preferences.iteritems()
+        repartitions = {t: self.preferences[t] for t in self.preferences.keys()
                         if t in self.themes}
         nb_per_theme = {t: len(prefs) for t, prefs in repartitions}
         print(nb_per_theme)
