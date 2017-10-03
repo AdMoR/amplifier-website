@@ -15,7 +15,7 @@ from .user_data.user import User
 from .databases import RedisUserHandler, UserAlreadyCreatedException
 from .user_data import MissingFieldException, InvalidEmailException, LowLengthPasswordException,\
                        InvalidBirthdateException
-from .team_handling import Team, TeamHandler
+from .team_handling import Team, TeamHandler, ThemeSelector
 
 
 redis_access = RedisUserHandler()
@@ -407,7 +407,21 @@ def reinvite_missing_emails():
                            success=success), 200
 
 
+@api_v1.route("/theme_selector", methods=['GET'])
+def theme_selector():
+    all_emails = redis_access.get_user_list()
+    all_user_themes = {user['form']['']}
+
+    th_se = ThemeSelector()
+
+
+
 ######### Helper #############################
+
+
+def get_user_per_preferences(redis_access)
+
+
 
 def invite_user_to_slack(first_name, last_name, email, token):
     url = "https://slack.com/api/users.admin.invite?token={}&email={}&first_name={}&last_name={}"
