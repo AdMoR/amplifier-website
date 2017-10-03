@@ -419,7 +419,8 @@ def theme_selector():
 ######### Helper #############################
 
 
-def get_user_per_preferences(redis_access)
+def get_user_per_preferences(redis_access):
+    pass
 
 
 
