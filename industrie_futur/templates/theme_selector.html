@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block header %} {% include 'header_contenu.html' %} {% endblock %}
+
+{% block content %}
+
+    <!-- About -->
+    <aside class="futur">
+        <div class="text-center" id="content">
+            <h1>Repartition</h1>
+        </div>
+    </aside>
+
+    {% if results %}
+    <section class="success" id="repartition">
+        Theme repartition
+        <div class="container">
+            {% for theme in results %}
+                <p> {{ theme }} </p>
+                <p> {{ results[theme] }} </p>
+            {% endfor %}
+        </div>
+
+
+    </section>
+    {% endif %}
+
+
+
+{% endblock %}
