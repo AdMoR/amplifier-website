@@ -341,6 +341,8 @@ def retrieve_admin_info():
         #data = User.get(redis_access, member_email)
         available_results = []
         schools = {}
+        email_list = redis_access.get_user_list()
+        email_list = [str_.decode('utf-8') for str_ in email_list]
         for email in redis_access.get_user_list():
             session = pickle.loads(redis_access.hget(email, "session"))
             available_results.append(session)
@@ -354,6 +356,7 @@ def retrieve_admin_info():
                                see_result=True,
                                num_results=len(available_results),
                                schools=schools,
+                               email_list=email_list,
                                available_results=available_results), 200
     else:
         return admin_info()
