@@ -416,17 +416,17 @@ def theme_selector():
     all_user_themes = {user: redis_access.get_session(user)['favtheme'][0]
                        for user in all_emails}
 
-    themes = list(set(all_user_themes.values()))
+    themes = ['t1', 't2', 't3', 't0']
     themes_to_users = {theme: [] for theme in themes}
     for user in all_user_themes:
         themes_to_users[all_user_themes[user]].append(user)
+    print(themes_to_users)
 
     th_se = ThemeSelector(themes_to_users, [])
     results = th_se.find_admissible_repartition()
 
     return render_template("theme.html",
                            results=results), 200
-
 
 
 ######### Helper #############################
