@@ -33,9 +33,10 @@ class ThemeSelector(object):
             while len(self.preferences[nopref]) > 0:
                 smallest_theme = sorted(self.themes, key=lambda t: nb_per_theme[t])
                 user_to_add = self.preferences[nopref].pop()
-                print(user_to_add)
+                print(repartitions)
                 repartitions[smallest_theme[0]].append(user_to_add)
-                nb_per_theme = {t: len(prefs) for t, prefs in repartitions}
+                print(repartitions)
+                nb_per_theme = {t: len(repartitions[t]) for t in self.themes}
 
         print(nb_per_theme)
         return repartitions
