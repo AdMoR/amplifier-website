@@ -477,7 +477,7 @@ def theme_selector():
 
     # Team associations
     team_association = team_handler.user_associations()
-    unify_results(presented_results, team_association)
+    unify_results(results, team_association)
 
     return render_template("theme.html",
                            score=score,
