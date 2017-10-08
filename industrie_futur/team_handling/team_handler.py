@@ -80,6 +80,9 @@ class TeamHandler(object):
         print(self.all_teams)
         self.save_teams()
 
+    def user_associations(self):
+        return [t.members for t in self.all_teams]
+
     def add_member_in_team_by_name(self, name, member_name):
         '''
         Add a user to a team if the team exists and save to DB

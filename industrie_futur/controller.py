@@ -475,17 +475,22 @@ def theme_selector():
                                 if u in results[t]}
         presented_results[u].update(user_preferences[u])
 
+    # Team associations
+    team_association = team_handler.user_associations()
+
     return render_template("theme.html",
                            score=score,
+                           team_association=team_association,
                            results=presented_results), 200
 
 
 ######### Helper #############################
 
 
+
+
 def get_user_per_preferences(redis_access):
     pass
-
 
 
 def invite_user_to_slack(first_name, last_name, email, token):

@@ -13,8 +13,9 @@
 
     {% if results %}
     <section class="success" id="repartition">
-        Theme repartition
-        score = {{ score }}
+        Theme repartition<br>
+        score = {{ score }}<br>
+        team_association = {{ team_association }}
         <div class="container">
             {% for theme in results %}
                 <p> {{ theme }} </p>
