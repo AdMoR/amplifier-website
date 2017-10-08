@@ -491,8 +491,13 @@ def theme_selector():
 
 
 def unify_results(results, team_association):
+    user_to_assigned_t = {}
+    for t in results.keys():
+        for u in results[t]:
+            user_to_assigned_t[u] = t
+
     for team in team_association:
-        all_themes = set([results[u]['assigned'] for u in team])
+        all_themes = set([user_to_assigned_t[u] for u in team])
         print(all_themes)
 
 
