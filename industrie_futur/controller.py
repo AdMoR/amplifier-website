@@ -6,6 +6,7 @@ from flask import render_template, Blueprint, jsonify, request, send_from_direct
 from flask_login import login_user, logout_user, login_required, current_user
 from werkzeug.wrappers import Response
 from dateutil.parser import parse
+import random
 from config import Config as config
 from . import LOG, sentry, login_manager
 from . import app
@@ -436,6 +437,13 @@ def theme_selector():
         if len(preference) == 2:
             missing_key = [t for t in themes if t not in list(preference.values())]
             preference[3] = missing_key[0]
+
+        if len(preference) == 1:
+            missing_key = [t for t in themes if t not in list(preference.values())]
+            rand_index = random.randint(1, 5) % len(missing_key)
+            rand_index_po = (rand_index + 1) % len(missing_key)
+            preference[2] = missing_key[rand_index]
+            preference[3] = missing_key[rand_index_po]
 
         user_preferences[user] = preference
 
