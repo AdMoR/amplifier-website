@@ -425,7 +425,14 @@ def theme_selector():
         session = redis_access.get_session(user)
 
         # First preference : always there
-        preference[1] = session['favtheme'][0]
+        pref1 = session['favtheme'][0]
+        if pref1 == 't0':
+            if random.randint(1, 10) % 2 == 0:
+                preference = {1: 't3', 2: 't2', 3: 't1'}
+            else:
+                preference = {1: 't2', 2: 't3', 3: 't1'}
+        else:
+            preference[1] = pref1
 
         # Second preference is not always there and has different forms
         if len(session['favtheme']) > 1:
