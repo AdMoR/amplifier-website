@@ -149,15 +149,12 @@ class ThemeSelector(object):
         return all_solutions
 
     def evaluate_solution(self, solution, preferences):
-        theme_selected_per_user = {}
-        for t in solution:
-            for u in solution[t]:
-                theme_selected_per_user[u] = t
 
         score = 0
         for t in solution.keys():
-            score_calculation = self.inverted_pref[u][t]
-            score += score_calculation
+            for u in solution[t]:
+                score_calculation = self.inverted_pref[u][t]
+                score += score_calculation
 
         return score
 
