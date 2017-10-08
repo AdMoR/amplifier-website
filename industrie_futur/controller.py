@@ -494,7 +494,7 @@ def unify_results(results, team_association):
     user_to_assigned_t = {}
     for t in results.keys():
         for u in results[t]:
-            user_to_assigned_t[u] = t
+            user_to_assigned_t[u.decode('utf-8')] = t
 
     print(team_association, user_to_assigned_t)
 
