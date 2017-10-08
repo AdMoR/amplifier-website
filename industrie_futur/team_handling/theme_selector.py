@@ -133,7 +133,7 @@ class ThemeSelector(object):
         index_to_user = {i: user for i, user in enumerate(users)}
         all_permutations = itertools.permutations(range(len(users)))
 
-        n_group = len(users) / len(themes)
+        n_group = int(len(users) / len(themes))
 
         all_solutions = []
         for perm in all_permutations:
