@@ -112,8 +112,11 @@ class ThemeSelector(object):
                 best_score = score
 
         print(best_solution)
+        final_best_solution = {t: [u.decode('utf-8')
+                                   for u in best_solution[t]]
+                               for t in best_solution.keys()}
 
-        return best_solution, best_score
+        return final_best_solution, best_score
 
 
 
