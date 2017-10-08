@@ -33,44 +33,58 @@ class ThemeSelector(object):
         # 3 : Assign users from the largest theme to the smallest
         attempt_repartition = copy.deepcopy(repartitions)
         print('---_>', self.preferences)
-        final_repartition = self.brute_force_filling(attempt_repartition, themes, filler, filler_margin)
+        best_repartition = None
+        best_score = 10000
+        for attempt in range(1000):
+            repartition, score = self.random_filling(attempt_repartition, themes, filler, filler_margin)
 
-        return final_repartition
+            if score < best_score:
+                print('score', score, best_score)
+                best_repartition = copy.deepcopy(repartition)
+                best_score = copy.deepcopy(score)
 
-    def random_filling(self, repartitions, themes, filler, filler_margin=10):
+        return best_repartition, best_score
+
+    def random_filling(self, repartitions, themes, filler, filler_margin=0):
         """
         Be stupid
         """
 
         # random assignement iteration
-        def one_step(repartitions, themes):
+        def one_step(repartitions, themes, act=True):
             themes_ordered_by_nb_users = sorted(themes, key=lambda t: len(repartitions[t]))
             smallest_t, biggest_t = themes_ordered_by_nb_users[0], themes_ordered_by_nb_users[-1]
-            random.shuffle(repartitions[biggest_t])
-            random_user = repartitions[biggest_t].pop()
-            repartitions[smallest_t].append(random_user)
+            if act:
+                randin_index = random.randint(1, 10000) % len(repartitions[biggest_t])
+                random_user = repartitions[biggest_t].pop(randin_index)
+                repartitions[smallest_t].append(random_user)
             max_difference = len(repartitions[biggest_t]) - len(repartitions[smallest_t])
             return max_difference
 
-        max_difference = one_step(repartitions, themes)
+        max_difference = one_step(repartitions, themes, act=False)
         # Do the random assignement while the gap is too big
         while max_difference > filler_margin:
             max_difference = one_step(repartitions, themes)
 
         # Assign randomly the filler
-        for i, user in enumerate(repartitions[filler]):
-            theme_key = themes[i % len(themes)]
-            repartitions[theme_key].append(user)
+        if filler in repartitions.keys():
+            for i, user in enumerate(repartitions[filler]):
+                theme_key = themes[i % len(themes)]
+                repartitions[theme_key].append(user)
 
-        # delete the filler
-        del repartitions[filler]
+            # delete the filler
+            del repartitions[filler]
 
         score = self.evaluate_solution(repartitions, self.preferences)
 
         return repartitions, score
 
     def brute_force_filling(self, repartitions, themes, filler, filler_margin=10):
-        all_solutions = self.generate_solution_space(users=self.preferences.keys(),
+
+        user_ordered = sum([repartitions[t] for t in repartitions.keys()], [])
+        print(user_ordered)
+
+        all_solutions = self.generate_solution_space(users=user_ordered,
                                                      themes=themes)
         best_solution = None
         best_score = 100000
@@ -87,9 +101,9 @@ class ThemeSelector(object):
 
 
 
-##########
-# HELPERS
-##########
+###########
+# HELPERS #
+###########
 
 
     def generate_solution_space(self, users, themes, limit=10000):
