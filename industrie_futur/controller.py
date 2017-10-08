@@ -435,14 +435,15 @@ def theme_selector():
             preference[1] = pref1
 
         # Second preference is not always there and has different forms
-        if len(session['favtheme']) > 1:
-            pref2 = session['favtheme'][1]
-            if not pref2 == 't0':
-                preference[2] = pref2
-        if 'favtheme2' in session.keys():
-            pref2 = session['favtheme2'][0]
-            if not pref2 == 't0':
-                preference[2] = pref2
+        if len(preference) < 3:
+            if len(session['favtheme']) > 1:
+                pref2 = session['favtheme'][1]
+                if not pref2 == 't0':
+                    preference[2] = pref2
+            if 'favtheme2' in session.keys():
+                pref2 = session['favtheme2'][0]
+                if not pref2 == 't0':
+                    preference[2] = pref2
 
         # Put third pref as deduction from pref 1 and 2
         if len(preference) == 2:
