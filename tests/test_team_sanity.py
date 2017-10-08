@@ -37,9 +37,9 @@ class TestTeamRedis(TestCase):
             if indicator:
                 cleaned_team.append(t1)
 
-        self.r.set('teams', pickle.dumps(cleaned_team))
+        #self.r.set('teams', pickle.dumps(cleaned_team))
 
-        print("Found {}".format([t.__dict__ for t in teams_to_delete]))
+        print("Found {}".format([t.__dict__ for t in cleaned_team]))
 
 
 
