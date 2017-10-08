@@ -428,9 +428,9 @@ def theme_selector():
         pref1 = session['favtheme'][0]
         if pref1 == 't0':
             if random.randint(1, 10) % 2 == 0:
-                preference = {1: 't3', 2: 't2', 3: 't1'}
+                preference = {1: 't3', 1.1: 't2', 1.11: 't1'}
             else:
-                preference = {1: 't2', 2: 't3', 3: 't1'}
+                preference = {1: 't2', 1.1: 't3', 1.11: 't1'}
         else:
             preference[1] = pref1
 
