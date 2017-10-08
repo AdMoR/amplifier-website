@@ -25,16 +25,19 @@ class TestTeamRedis(TestCase):
         self.r.set('old_teams', self.r.get('teams'))
         teams_to_delete = []
 
+        cleaned_team = []
         for t1 in teams:
+            indicator = True
             if t1.name is None:
                 for t2 in teams:
                     if t1.creator == t2.creator and t1.description is None:
                         print("Found empty duplicate team")
-                        teams_to_delete.append(t1)
+                        indicator = False
+                        break
+            if indicator:
+                cleaned_team.append(t1)
 
-        for t in teams_to_delete:
-            teams.remove(t)
-        self.r.set('teams', pickle.dumps(teams))
+        self.r.set('teams', pickle.dumps(cleaned_team))
 
         print("Found {}".format([t.__dict__ for t in teams_to_delete]))
 
