@@ -496,6 +496,8 @@ def unify_results(results, team_association):
         for u in results[t]:
             user_to_assigned_t[u] = t
 
+    print(team_association, user_to_assigned_t)
+
     for team in team_association:
         all_themes = set([user_to_assigned_t[u] for u in team
                           if u in user_to_assigned_t.keys()])
