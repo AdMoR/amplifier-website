@@ -37,7 +37,7 @@ class TestTeamRedis(TestCase):
             if indicator:
                 cleaned_team.append(t1)
 
-        #self.r.set('teams', pickle.dumps(cleaned_team))
+        self.r.set('teams', pickle.dumps(cleaned_team))
 
         if len(cleaned_team) != len(teams):
             print("Found {}".format([t.__dict__ for t in cleaned_team]))
