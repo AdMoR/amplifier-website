@@ -477,12 +477,13 @@ def theme_selector():
 
     # Team associations
     team_association = team_handler.user_associations()
-    unify_results(results, team_association)
+
 
     return render_template("theme.html",
                            score=score,
                            team_association=team_association,
-                           results=presented_results), 200
+                           results=results,
+                           details=presented_results), 200
 
 
 ######### Helper #############################
@@ -502,6 +503,8 @@ def unify_results(results, team_association):
         all_themes = set([user_to_assigned_t[u] for u in team
                           if u in user_to_assigned_t.keys()])
         print('all_themes', all_themes)
+        if len(all_themes):
+            pass
 
 
 
