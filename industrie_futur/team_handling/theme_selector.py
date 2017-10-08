@@ -63,7 +63,6 @@ class ThemeSelector(object):
         def one_step(repartitions, themes, act=True):
             themes_ordered_by_nb_users = sorted(themes, key=lambda t: len(repartitions[t]))
             smallest_t, biggest_t = themes_ordered_by_nb_users[0], themes_ordered_by_nb_users[-1]
-            print(smallest_t, biggest_t, len(repartitions[smallest_t]), len(repartitions[biggest_t]))
             if act:
                 #randin_index = random.randint(1, 10000) % len(repartitions[biggest_t])
                 Z = sum([math.exp(-self.inverted_pref[u][biggest_t])
@@ -78,12 +77,9 @@ class ThemeSelector(object):
             return max_difference
 
         max_difference = one_step(repartitions, themes, act=False)
-        print(max_difference)
         # Do the random assignement while the gap is too big
         while max_difference > filler_margin:
-            print(repartitions)
             max_difference = one_step(repartitions, themes)
-            print(repartitions)
 
         # Assign randomly the filler
         if filler in repartitions.keys():
