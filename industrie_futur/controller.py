@@ -435,16 +435,17 @@ def theme_selector():
         # Put third pref as deduction from pref 1 and 2
         if len(preference) == 2:
             missing_key = [t for t in themes if t not in list(preference.values())]
-            preference[3] = missing_key
+            preference[3] = missing_key[0]
 
         user_preferences[user] = preference
 
     print(user_preferences)
 
     th_se = ThemeSelector(user_preferences)
-    results = th_se.assign_theme_to_users(themes, filler='t0')
+    results, score = th_se.assign_theme_to_users(themes, filler='t0')
 
     return render_template("theme.html",
+                           score=score,
                            results=results), 200
 
 
