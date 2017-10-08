@@ -3,6 +3,8 @@ from ..user_data import User
 import copy
 import itertools
 import random
+import math
+import numpy as np
 
 
 class ThemeSelector(object):
@@ -12,6 +14,9 @@ class ThemeSelector(object):
         Algs
         '''
         self.preferences = preference_dicts
+        self.inverted_pref = {u: {preference_dicts[u][i]: i
+                                  for i in preference_dicts[u]}
+                              for u in preference_dicts}
 
     def assign_theme_to_users(self, themes=['t1', 't2', 't3'], filler='t0'):
         """
@@ -55,8 +60,14 @@ class ThemeSelector(object):
             themes_ordered_by_nb_users = sorted(themes, key=lambda t: len(repartitions[t]))
             smallest_t, biggest_t = themes_ordered_by_nb_users[0], themes_ordered_by_nb_users[-1]
             if act:
-                randin_index = random.randint(1, 10000) % len(repartitions[biggest_t])
-                random_user = repartitions[biggest_t].pop(randin_index)
+                #randin_index = random.randint(1, 10000) % len(repartitions[biggest_t])
+                Z = sum([math.exp(-self.inverted_pref[u][biggest_t])
+                         for u in repartitions[biggest_t]])
+                rand_user = np.random.choice(repartitions[biggest_t],
+                                             p=[(1. / Z) * math.exp(-self.inverted_pref[u][biggest_t])
+                                             for u in repartitions[biggest_t]])
+                randin = repartitions[biggest_t].index(rand_user)
+                random_user = repartitions[biggest_t].pop(randin)
                 repartitions[smallest_t].append(random_user)
             max_difference = len(repartitions[biggest_t]) - len(repartitions[smallest_t])
             return max_difference
@@ -69,7 +80,8 @@ class ThemeSelector(object):
         # Assign randomly the filler
         if filler in repartitions.keys():
             for i, user in enumerate(repartitions[filler]):
-                theme_key = themes[i % len(themes)]
+                themes_ordered_by_nb_users = sorted(themes, key=lambda t: len(repartitions[t]))
+                theme_key = themes_ordered_by_nb_users[0]
                 repartitions[theme_key].append(user)
 
             # delete the filler
