@@ -466,6 +466,11 @@ def theme_selector():
 
     presented_results = {}
     for u in user_preferences:
+
+        t_pref = user_preferences[u].get(1)
+        if u in results[t_pref]:
+            continue
+
         presented_results[u] = {'assigned': t for t in results.keys()
                                 if u in results[t]}
         presented_results[u].update(user_preferences[u])
