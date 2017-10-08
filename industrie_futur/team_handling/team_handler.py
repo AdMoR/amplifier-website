@@ -81,7 +81,7 @@ class TeamHandler(object):
         self.save_teams()
 
     def user_associations(self):
-        return [t.members for t in self.all_teams]
+        return [t.members for t in self.all_teams if len(t) > 1]
 
     def add_member_in_team_by_name(self, name, member_name):
         '''
