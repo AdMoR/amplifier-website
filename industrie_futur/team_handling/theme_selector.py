@@ -37,7 +37,7 @@ class ThemeSelector(object):
         best_score = 10000
         for attempt in range(1000):
             repartition, score = self.random_filling(attempt_repartition, themes, filler, filler_margin)
-
+            print('Current score {}'.format(score))
             if score < best_score:
                 print('score', score, best_score)
                 best_repartition = copy.deepcopy(repartition)
