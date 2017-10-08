@@ -477,6 +477,7 @@ def theme_selector():
 
     # Team associations
     team_association = team_handler.user_associations()
+    unify_results(presented_results, team_association)
 
     return render_template("theme.html",
                            score=score,
@@ -489,8 +490,13 @@ def theme_selector():
 
 
 
-def get_user_per_preferences(redis_access):
-    pass
+def unify_results(results, team_association):
+    for team in team_association:
+        all_themes = set([results[u]['assigned'] for u in team])
+        print(all_themes)
+
+
+
 
 
 def invite_user_to_slack(first_name, last_name, email, token):
