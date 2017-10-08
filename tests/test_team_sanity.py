@@ -39,7 +39,9 @@ class TestTeamRedis(TestCase):
 
         #self.r.set('teams', pickle.dumps(cleaned_team))
 
-        print("Found {}".format([t.__dict__ for t in cleaned_team]))
+        if len(cleaned_team) != len(teams):
+            print("Found {}".format([t.__dict__ for t in cleaned_team]))
+            raise Exception
 
 
 
