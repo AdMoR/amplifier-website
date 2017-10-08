@@ -124,7 +124,9 @@ class ThemeSelector(object):
         for u in preferences:
             score_calculation = [k for k in preferences[u].keys()
                                  if preferences[u][k] == theme_selected_per_user[u]]
-            assert(len(score_calculation) == 1)
+            if not (len(score_calculation) == 1):
+                print('error', score_calculation, theme_selected_per_user[u], preferences[u])
+                raise Exception
             score += sum(score_calculation)
 
         return score
