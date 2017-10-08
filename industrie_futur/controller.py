@@ -464,9 +464,15 @@ def theme_selector():
     th_se = ThemeSelector(user_preferences)
     results, score = th_se.assign_theme_to_users(themes, filler='t0')
 
+    presented_results = {}
+    for u in user_preferences:
+        presented_results[u] = {'assigned': t for t in results.keys()
+                                if u in results[t]}
+        presented_results[u].update(user_preferences[u])
+
     return render_template("theme.html",
                            score=score,
-                           results=results), 200
+                           results=presented_results), 200
 
 
 ######### Helper #############################
