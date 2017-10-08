@@ -37,15 +37,15 @@ class ThemeSelector(object):
         # 3 : Assign users from the largest theme to the smallest
         best_repartition = None
         best_score = 10000
-        for attempt in range(10):
+        for attempt in range(1000):
             print("\n\n")
             attempt_repartition = copy.deepcopy(repartitions)
-            if attempt % 9 == 0:
+            if attempt % 99 == 0:
                 print('User preferences : ', self.preferences)
                 print('attempt repartition before filling', attempt_repartition)
             res_repartition, res_score = self.random_filling(attempt_repartition,
                                                              themes, filler, filler_margin)
-            if attempt % 9 == 0:
+            if attempt % 99 == 0:
                 print('Debug : Current score {}'.format(res_score))
             if res_score < best_score:
                 print('New best score', res_score, best_score, 'optimal score', n_users)
