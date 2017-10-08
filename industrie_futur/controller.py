@@ -412,18 +412,37 @@ def reinvite_missing_emails():
 
 @api_v1.route("/theme_selector", methods=['GET'])
 def theme_selector():
+
     all_emails = redis_access.get_user_list()
-    all_user_themes = {user: redis_access.get_session(user)['favtheme'][0]
-                       for user in all_emails}
+    themes = ['t1', 't2', 't3']
+    user_preferences = {}
 
-    themes = ['t1', 't2', 't3', 't0']
-    themes_to_users = {theme: [] for theme in themes}
-    for user in all_user_themes:
-        themes_to_users[all_user_themes[user]].append(user)
-    print(themes_to_users)
+    # We build the preference dict for all users
+    print(all_emails)
+    for user in all_emails:
+        preference = {}
+        session = redis_access.get_session(user)
 
-    th_se = ThemeSelector(themes_to_users, [])
-    results = th_se.find_admissible_repartition()
+        # First preference : always there
+        preference[1] = session['favtheme'][0]
+
+        # Second preference is not always there and has different forms
+        if len(session['favtheme']) > 1:
+            preference[2] = session['favtheme'][1]
+        if 'favtheme2' in session.keys():
+            preference[2] = session['favtheme2'][0]
+
+        # Put third pref as deduction from pref 1 and 2
+        if len(preference) == 2:
+            missing_key = [t for t in themes if t not in list(preference.values())]
+            preference[3] = missing_key
+
+        user_preferences[user] = preference
+
+    print(user_preferences)
+
+    th_se = ThemeSelector(user_preferences)
+    results = th_se.assign_theme_to_users(themes, filler='t0')
 
     return render_template("theme.html",
                            results=results), 200
