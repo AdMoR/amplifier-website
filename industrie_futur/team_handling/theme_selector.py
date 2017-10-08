@@ -25,10 +25,9 @@ class ThemeSelector(object):
         # 1 : Calculate the split that we want to reach and
         # how many user should move from prefered theme
         n_users = len(self.preferences)
-        n_user_per_theme = n_users / len(themes)
 
         # 2 : Get repartition and create correctness margin based on filler
-        repartitions = {t: [] for t in themes + [filler]}
+        repartitions = {t: [] for t in (themes + [filler])}
         for user in self.preferences.keys():
             first_pref = self.preferences[user].get(1)
             repartitions[first_pref].append(user)
@@ -36,17 +35,22 @@ class ThemeSelector(object):
         filler_margin = len(repartitions[filler]) / (len(themes) - 1)
 
         # 3 : Assign users from the largest theme to the smallest
-        attempt_repartition = copy.deepcopy(repartitions)
         best_repartition = None
         best_score = 10000
-        for attempt in range(1000):
-            repartition, score = self.random_filling(attempt_repartition, themes, filler, filler_margin)
+        for attempt in range(10):
+            print("\n\n")
+            attempt_repartition = copy.deepcopy(repartitions)
             if attempt % 9 == 0:
-                print('Debug : Current score {}'.format(score))
-            if score < best_score:
-                print('New best score', score, best_score, 'optimal score', n_users)
-                best_repartition = copy.deepcopy(repartition)
-                best_score = copy.deepcopy(score)
+                print('User preferences : ', self.preferences)
+                print('attempt repartition before filling', attempt_repartition)
+            res_repartition, res_score = self.random_filling(attempt_repartition,
+                                                             themes, filler, filler_margin)
+            if attempt % 9 == 0:
+                print('Debug : Current score {}'.format(res_score))
+            if res_score < best_score:
+                print('New best score', res_score, best_score, 'optimal score', n_users)
+                best_repartition = copy.deepcopy(res_repartition)
+                best_score = copy.deepcopy(res_score)
 
         return best_repartition, best_score
 
@@ -59,6 +63,7 @@ class ThemeSelector(object):
         def one_step(repartitions, themes, act=True):
             themes_ordered_by_nb_users = sorted(themes, key=lambda t: len(repartitions[t]))
             smallest_t, biggest_t = themes_ordered_by_nb_users[0], themes_ordered_by_nb_users[-1]
+            print(smallest_t, biggest_t, len(repartitions[smallest_t]), len(repartitions[biggest_t]))
             if act:
                 #randin_index = random.randint(1, 10000) % len(repartitions[biggest_t])
                 Z = sum([math.exp(-self.inverted_pref[u][biggest_t])
@@ -73,9 +78,12 @@ class ThemeSelector(object):
             return max_difference
 
         max_difference = one_step(repartitions, themes, act=False)
+        print(max_difference)
         # Do the random assignement while the gap is too big
         while max_difference > filler_margin:
+            print(repartitions)
             max_difference = one_step(repartitions, themes)
+            print(repartitions)
 
         # Assign randomly the filler
         if filler in repartitions.keys():
@@ -147,13 +155,9 @@ class ThemeSelector(object):
                 theme_selected_per_user[u] = t
 
         score = 0
-        for u in preferences:
-            score_calculation = [k for k in preferences[u].keys()
-                                 if preferences[u][k] == theme_selected_per_user[u]]
-            if not (len(score_calculation) == 1):
-                print('error', score_calculation, theme_selected_per_user[u], preferences[u])
-                raise Exception
-            score += sum(score_calculation)
+        for t in solution.keys():
+            score_calculation = self.inverted_pref[u][t]
+            score += score_calculation
 
         return score
 
