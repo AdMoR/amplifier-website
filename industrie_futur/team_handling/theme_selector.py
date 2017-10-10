@@ -138,6 +138,7 @@ class ThemeSelector(object):
     def add_user_to_theme(self, repartition, theme, user):
         repartition[theme].append(user)
         if user in self.user_to_team.keys():
+            print(">>>>> Adding team {}".format(self.user_to_team[user]))
             for teammate in self.user_to_team[user]:
                 if teammate != user:
                     t_theme = self.find_user_theme(repartition, teammate)
