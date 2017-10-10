@@ -65,6 +65,7 @@ class ThemeSelector(object):
 
         # random assignement iteration
         def one_step(repartitions, themes, act=True):
+            has_changed = self.team_correctness(repartitions)
             themes_ordered_by_nb_users = sorted(themes, key=lambda t: len(repartitions[t]))
             smallest_t, biggest_t = themes_ordered_by_nb_users[0], themes_ordered_by_nb_users[-1]
             if act:
@@ -79,12 +80,13 @@ class ThemeSelector(object):
                 #repartitions[smallest_t].append(random_user)
                 repartitions = self.add_user_to_theme(repartitions, smallest_t, random_user)
             max_difference = len(repartitions[biggest_t]) - len(repartitions[smallest_t])
-            return max_difference
+            return max_difference, has_changed
 
-        max_difference = one_step(repartitions, themes, act=False)
+        max_difference, has_changed = one_step(repartitions, themes, act=False)
         # Do the random assignement while the gap is too big
-        while max_difference > filler_margin:
-            max_difference = one_step(repartitions, themes)
+        while max_difference > filler_margin or has_changed:
+            max_difference, has_changed = one_step(repartitions, themes)
+
 
         # Assign randomly the filler
         if filler in repartitions.keys():
@@ -129,6 +131,21 @@ class ThemeSelector(object):
 # HELPERS #
 ###########
 
+    def team_correctness(self, repartition):
+        has_changed = False
+        for t in repartition.keys():
+            for user in repartition[t]:
+                if user in self.user_to_team.keys():
+                    for teammate in self.user_to_team[user]:
+                        other_theme = self.find_user_theme(repartition, teammate)
+                        if other_theme != t:
+                            not_user = repartition[other_theme].pop(repartition[other_theme].index(teammate))
+                            repartition[t].append(teammate)
+                            has_changed = True
+        return has_changed
+
+
+
     def find_user_theme(self, repartition, user):
         for theme in repartition.keys():
             if user in repartition[theme]:
@@ -137,14 +154,7 @@ class ThemeSelector(object):
 
     def add_user_to_theme(self, repartition, theme, user):
         repartition[theme].append(user)
-        if user in self.user_to_team.keys():
-            print(">>>>> Adding team {}".format(self.user_to_team[user]))
-            for teammate in self.user_to_team[user]:
-                if teammate != user:
-                    t_theme = self.find_user_theme(repartition, teammate)
-                    verif_teammate = repartition[t_theme].pop(repartition[t_theme].index(teammate))
-                    assert(teammate == verif_teammate)
-                    repartition[theme].append(teammate)
+        self.correctness(repartition)
         return repartition
 
 
