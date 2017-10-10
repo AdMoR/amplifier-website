@@ -478,13 +478,17 @@ def theme_selector():
                                 if u in results[t]}
         presented_results[u].update(user_preferences[u])
 
-
+    final_results = {}
+    for t in results.keys():
+        final_results[t] = []
+        for user in results[t]:
+            final_results[t].append(user.decode('utf-8'))
 
 
     return render_template("theme.html",
                            score=score,
                            team_association=team_association,
-                           results=results,
+                           results=final_results,
                            details=presented_results), 200
 
 
