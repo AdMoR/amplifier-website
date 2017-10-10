@@ -33,7 +33,7 @@ class ThemeSelector(object):
         # 2 : Get repartition and create correctness margin based on filler
         repartitions = {t: [] for t in (themes + [filler])}
         for user in self.preferences.keys():
-            print(user)
+            print(user.decode('utf-8'), self.user_to_team.keys())
             if user.decode('utf-8') not in self.user_to_team.keys():
                 first_pref = self.preferences[user].get(1)
                 repartitions[first_pref].append(user)
@@ -48,7 +48,6 @@ class ThemeSelector(object):
             attempt_repartition = copy.deepcopy(repartitions)
             if attempt % 99 == 0:
                 print("\n\n")
-                print(self.user_to_team)
                 #print('User preferences : ', self.preferences)
                 #print('attempt repartition before filling', attempt_repartition)
             res_repartition, res_score = self.random_filling(attempt_repartition,
