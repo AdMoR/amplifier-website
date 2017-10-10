@@ -9,7 +9,7 @@ import numpy as np
 
 class ThemeSelector(object):
 
-    def __init__(self, preference_dicts):
+    def __init__(self, preference_dicts, teams):
         '''
         Algs
         '''
@@ -17,6 +17,10 @@ class ThemeSelector(object):
         self.inverted_pref = {u: {preference_dicts[u][i]: i
                                   for i in preference_dicts[u]}
                               for u in preference_dicts}
+        self.user_to_team = {}
+        for team in teams:
+            for user in team:
+                self.user_to_team[user] = team
 
     def assign_theme_to_users(self, themes=['t1', 't2', 't3'], filler='t0'):
         """
@@ -72,7 +76,8 @@ class ThemeSelector(object):
                                              for u in repartitions[biggest_t]])
                 randin = repartitions[biggest_t].index(rand_user)
                 random_user = repartitions[biggest_t].pop(randin)
-                repartitions[smallest_t].append(random_user)
+                #repartitions[smallest_t].append(random_user)
+                repartitions = self.add_user_to_theme(repartitions, smallest_t, random_user)
             max_difference = len(repartitions[biggest_t]) - len(repartitions[smallest_t])
             return max_difference
 
@@ -86,7 +91,7 @@ class ThemeSelector(object):
             for i, user in enumerate(repartitions[filler]):
                 themes_ordered_by_nb_users = sorted(themes, key=lambda t: len(repartitions[t]))
                 theme_key = themes_ordered_by_nb_users[0]
-                repartitions[theme_key].append(user)
+                repartitions = self.add_user_to_theme(repartitions, theme_key, user)
 
             # delete the filler
             del repartitions[filler]
@@ -123,6 +128,24 @@ class ThemeSelector(object):
 ###########
 # HELPERS #
 ###########
+
+    def find_user_theme(self, repartition, user):
+        for theme in repartition.keys():
+            if user in repartition[theme]:
+                return theme
+        raise Exception("User not found")
+
+    def add_user_to_theme(self, repartition, theme, user):
+        repartition[theme].append(user)
+        if user in self.user_to_team.keys():
+            for teammate in self.user_to_team[user]:
+                if teammate != user:
+                    t_theme = self.find_user_theme(repartition, teammate)
+                    verif_teammate = repartition[t_theme].pop(repartition[t_theme].index(teammate))
+                    assert(teammate == verif_teammate)
+                    repartition[theme].append(teammate)
+        return repartition
+
 
 
     def generate_solution_space(self, users, themes, limit=10000):

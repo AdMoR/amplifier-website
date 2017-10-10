@@ -461,7 +461,10 @@ def theme_selector():
 
     print(user_preferences)
 
-    th_se = ThemeSelector(user_preferences)
+    # Team associations
+    team_association = team_handler.user_associations()
+
+    th_se = ThemeSelector(user_preferences, team_association)
     results, score = th_se.assign_theme_to_users(themes, filler='t0')
 
     presented_results = {}
@@ -475,8 +478,7 @@ def theme_selector():
                                 if u in results[t]}
         presented_results[u].update(user_preferences[u])
 
-    # Team associations
-    team_association = team_handler.user_associations()
+
 
 
     return render_template("theme.html",
