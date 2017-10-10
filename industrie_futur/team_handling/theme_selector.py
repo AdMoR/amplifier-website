@@ -33,8 +33,9 @@ class ThemeSelector(object):
         # 2 : Get repartition and create correctness margin based on filler
         repartitions = {t: [] for t in (themes + [filler])}
         for user in self.preferences.keys():
-            first_pref = self.preferences[user].get(1)
-            repartitions[first_pref].append(user)
+            if user not in self.user_to_team.keys():
+                first_pref = self.preferences[user].get(1)
+                repartitions[first_pref].append(user)
         # the margin is based on the number of fillers
         filler_margin = len(repartitions[filler]) / (len(themes) - 1)
 
@@ -65,7 +66,6 @@ class ThemeSelector(object):
 
         # random assignement iteration
         def one_step(repartitions, themes, act=True):
-            has_changed = self.team_correctness(repartitions)
             themes_ordered_by_nb_users = sorted(themes, key=lambda t: len(repartitions[t]))
             smallest_t, biggest_t = themes_ordered_by_nb_users[0], themes_ordered_by_nb_users[-1]
             if act:
@@ -80,12 +80,12 @@ class ThemeSelector(object):
                 #repartitions[smallest_t].append(random_user)
                 repartitions = self.add_user_to_theme(repartitions, smallest_t, random_user)
             max_difference = len(repartitions[biggest_t]) - len(repartitions[smallest_t])
-            return max_difference, has_changed
+            return max_difference
 
-        max_difference, has_changed = one_step(repartitions, themes, act=False)
+        max_difference = one_step(repartitions, themes, act=False)
         # Do the random assignement while the gap is too big
-        while max_difference > filler_margin or has_changed:
-            max_difference, has_changed = one_step(repartitions, themes)
+        while max_difference > filler_margin:
+            max_difference = one_step(repartitions, themes)
 
 
         # Assign randomly the filler
@@ -154,7 +154,6 @@ class ThemeSelector(object):
 
     def add_user_to_theme(self, repartition, theme, user):
         repartition[theme].append(user)
-        self.team_correctness(repartition)
         return repartition
 
 
