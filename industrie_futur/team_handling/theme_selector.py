@@ -154,7 +154,7 @@ class ThemeSelector(object):
 
     def add_user_to_theme(self, repartition, theme, user):
         repartition[theme].append(user)
-        self.correctness(repartition)
+        self.team_correctness(repartition)
         return repartition
 
 
