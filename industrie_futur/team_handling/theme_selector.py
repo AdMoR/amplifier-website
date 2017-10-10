@@ -48,6 +48,7 @@ class ThemeSelector(object):
             attempt_repartition = copy.deepcopy(repartitions)
             if attempt % 99 == 0:
                 print("\n\n")
+                print(self.user_to_team)
                 #print('User preferences : ', self.preferences)
                 #print('attempt repartition before filling', attempt_repartition)
             res_repartition, res_score = self.random_filling(attempt_repartition,
