@@ -32,7 +32,7 @@ class Team(object):
             self.pending_members.append(user_id)
 
     def is_complete(self):
-        return len(self.members) > 3
+        return len(self.members) > 100
 
     def _to_dict_(self):
         str_dict = self.__dict__
