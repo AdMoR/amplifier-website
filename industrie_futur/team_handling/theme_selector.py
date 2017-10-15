@@ -49,7 +49,6 @@ class ThemeSelector(object):
 
 
         for user in self.preferences.keys():
-            print(user.decode('utf-8'), self.user_to_team.keys())
             if user.decode('utf-8') not in self.user_to_team.keys():
                 first_pref = self.preferences[user].get(1)
                 repartitions[first_pref].append(user)
