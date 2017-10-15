@@ -18,7 +18,7 @@ class ThemeSelector(object):
             self.already_assigned = self.load_previous_repartition(os.path.join(config.get("base_dir"), "repartition"))
             self.preferences = {u: preference_dicts[u]
                                 for u in preference_dicts.keys()
-                                if u not in self.already_assigned}
+                                if u.decode('utf-8') not in self.already_assigned}
 
         else:
             self.preferences = preference_dicts
