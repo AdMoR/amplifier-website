@@ -6,7 +6,7 @@ import random
 import sys
 sys.path.append('../..')
 sys.path.append('/home/amor/Alliance_industrie_futur')
-from industrie_futur.team_handling.team_handler import Team
+from industrie_futur.team_handling import Team, ThemeSelector
 from redis import StrictRedis
 from config import Config as config
 import pickle
@@ -20,6 +20,7 @@ class TestTeamRedis(TestCase):
     def setUp(self):
         self.r = StrictRedis()
 
+    @skip
     def test_find_empty_teams(self):
         teams = pickle.loads(self.r.get('teams'))
         self.r.set('old_teams', self.r.get('teams'))
@@ -42,6 +43,48 @@ class TestTeamRedis(TestCase):
         if len(cleaned_team) != len(teams):
             print("Found {}".format([t.__dict__ for t in cleaned_team]))
             raise Exception
+
+    def test_assignement_update(self):
+
+        user_list = self.create_dummy_users()
+        user_pref = {}
+        theme_list = ['t1', 't2', 't3']
+
+        for u in user_list:
+            random.shuffle(theme_list)
+            user_pref[u] = {1: theme_list[0], 1.1: theme_list[1], 1.11: theme_list[2]}
+
+        ts = ThemeSelector(preference_dicts=user_pref, teams=[])
+        #ts.assign_theme_to_users()
+
+        print([u for u in user_list if u not in ts.already_assigned])
+
+        if not (sum([len(ts.repartitions[t]) for t in ts.repartitions.keys()]) == len(user_list)):
+            print("Total assigned users", sum([len(ts.repartitions[t]) for t in ts.repartitions.keys()]))
+            print("All users", len(user_list))
+            assert(False)
+
+
+    def create_dummy_users(self):
+
+        def set_dummy(r, email):
+            r.hset(email, 'password', "plop")
+            r.hset(email, "session", None)
+
+        user_list = []
+
+        f = open("/Users/amorvan/Documents/code_dw/website-industrie-futur/repartition/all_users.txt")
+        for line in f:
+            if '@' in line:
+                user = line.rstrip()
+                if len(user) > 200:
+                    continue
+                set_dummy(self.r, user)
+                user_list.append(user)
+
+        return user_list
+
+
 
 
 

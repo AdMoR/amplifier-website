@@ -5,7 +5,8 @@ import itertools
 import random
 import math
 import numpy as np
-
+import os
+from config import Config as config
 
 class ThemeSelector(object):
 
@@ -13,14 +14,28 @@ class ThemeSelector(object):
         '''
         Algs
         '''
-        self.preferences = preference_dicts
+        self.repartitions = {}
+        if os.path.exists(os.path.join(config.get("base_dir"), "repartition")):
+            self.already_assigned = self.load_previous_repartition(os.path.join(config.get("base_dir"), "repartition"))
+            self.preferences = {u: preference_dicts[u]
+                                for u in preference_dicts.keys()
+                                if u not in self.already_assigned}
+
+        else:
+            self.preferences = preference_dicts
+            self.already_assigned = []
+
         self.inverted_pref = {u: {preference_dicts[u][i]: i
                                   for i in preference_dicts[u]}
                               for u in preference_dicts}
+
         self.user_to_team = {}
         for team in teams:
             for user in team:
                 self.user_to_team[user] = team
+
+
+
 
     def assign_theme_to_users(self, themes=['t1', 't2', 't3'], filler='t0'):
         """
@@ -31,25 +46,32 @@ class ThemeSelector(object):
         n_users = len(self.preferences)
 
         # 2 : Get repartition and create correctness margin based on filler
-        repartitions = {t: [] for t in (themes + [filler])}
+        # 2.1 : not repartition was previously assigned
+        if len(self.repartitions) == 0:
+            self.repartitions = {t: [] for t in (themes + [filler])}
+        # 2.2: append the filler
+        else:
+            self.repartitions.update({filler: []})
+
         for user in self.preferences.keys():
             print(user.decode('utf-8'), self.user_to_team.keys())
             if user.decode('utf-8') not in self.user_to_team.keys():
                 first_pref = self.preferences[user].get(1)
-                repartitions[first_pref].append(user)
+                self.repartitions[first_pref].append(user)
+
+
         # the margin is based on the number of fillers
-        filler_margin = len(repartitions[filler]) / (len(themes) - 1)
+        filler_margin = len(self.repartitions[filler]) / (len(themes) - 1)
 
         # 3 : Assign users from the largest theme to the smallest
         best_repartition = None
         best_score = 10000
         for attempt in range(1000):
 
-            attempt_repartition = copy.deepcopy(repartitions)
+            attempt_repartition = copy.deepcopy(self.repartitions)
             if attempt % 99 == 0:
                 print("\n\n")
-                #print('User preferences : ', self.preferences)
-                #print('attempt repartition before filling', attempt_repartition)
+
             res_repartition, res_score = self.random_filling(attempt_repartition,
                                                              themes, filler, filler_margin)
             if attempt % 99 == 0:
@@ -61,72 +83,48 @@ class ThemeSelector(object):
 
         return best_repartition, best_score
 
-    def random_filling(self, repartitions, themes, filler, filler_margin=0):
+    def random_filling(self, attempt_repartition, themes, filler, filler_margin=0):
         """
         Be stupid
         """
 
         # random assignement iteration
-        def one_step(repartitions, themes, act=True):
-            themes_ordered_by_nb_users = sorted(themes, key=lambda t: len(repartitions[t]))
+        def one_step(repartition, themes, act=True):
+            themes_ordered_by_nb_users = sorted(themes, key=lambda t: len(self.repartitions[t]))
             smallest_t, biggest_t = themes_ordered_by_nb_users[0], themes_ordered_by_nb_users[-1]
             if act:
-                #randin_index = random.randint(1, 10000) % len(repartitions[biggest_t])
+                #randin_index = random.randint(1, 10000) % len(self.repartitions[biggest_t])
                 Z = sum([math.exp(-self.inverted_pref[u][biggest_t])
-                         for u in repartitions[biggest_t]])
-                rand_user = np.random.choice(repartitions[biggest_t],
+                         for u in repartition[biggest_t]])
+                rand_user = np.random.choice(repartition[biggest_t],
                                              p=[(1. / Z) * math.exp(-self.inverted_pref[u][biggest_t])
-                                             for u in repartitions[biggest_t]])
-                randin = repartitions[biggest_t].index(rand_user)
-                random_user = repartitions[biggest_t].pop(randin)
-                #repartitions[smallest_t].append(random_user)
-                repartitions = self.add_user_to_theme(repartitions, smallest_t, random_user)
-            max_difference = len(repartitions[biggest_t]) - len(repartitions[smallest_t])
+                                             for u in repartition[biggest_t]])
+                randin = repartition[biggest_t].index(rand_user)
+                random_user = repartition[biggest_t].pop(randin)
+                #self.repartitions[smallest_t].append(random_user)
+                repartition = self.add_user_to_theme(repartition, smallest_t, random_user)
+            max_difference = len(repartition[biggest_t]) - len(self.repartitions[smallest_t])
             return max_difference
 
-        max_difference = one_step(repartitions, themes, act=False)
+        max_difference = one_step(attempt_repartition, themes, act=False)
         # Do the random assignement while the gap is too big
         while max_difference > filler_margin:
-            max_difference = one_step(repartitions, themes)
+            max_difference = one_step(attempt_repartition, themes)
 
 
         # Assign randomly the filler
-        if filler in repartitions.keys():
-            for i, user in enumerate(repartitions[filler]):
-                themes_ordered_by_nb_users = sorted(themes, key=lambda t: len(repartitions[t]))
+        if filler in attempt_repartition.keys():
+            for i, user in enumerate(attempt_repartition[filler]):
+                themes_ordered_by_nb_users = sorted(themes, key=lambda t: len(attempt_repartition[t]))
                 theme_key = themes_ordered_by_nb_users[0]
-                repartitions = self.add_user_to_theme(repartitions, theme_key, user)
+                attempt_repartition = self.add_user_to_theme(attempt_repartition, theme_key, user)
 
             # delete the filler
-            del repartitions[filler]
+            del attempt_repartition[filler]
 
-        score = self.evaluate_solution(repartitions, self.preferences)
+        score = self.evaluate_solution(attempt_repartition, self.preferences)
 
-        return repartitions, score
-
-    def brute_force_filling(self, repartitions, themes, filler, filler_margin=10):
-
-        user_ordered = sum([repartitions[t] for t in repartitions.keys()], [])
-        print(user_ordered)
-
-        all_solutions = self.generate_solution_space(users=user_ordered,
-                                                     themes=themes)
-        best_solution = None
-        best_score = 100000
-
-        for solution in all_solutions:
-            score = self.evaluate_solution(solution, self.preferences)
-            if score < best_score:
-                best_solution = solution
-                best_score = score
-
-        print(best_solution)
-        final_best_solution = {t: [u.decode('utf-8')
-                                   for u in best_solution[t]]
-                               for t in best_solution.keys()}
-
-        return final_best_solution, best_score
-
+        return attempt_repartition, score
 
 
 ###########
@@ -146,8 +144,6 @@ class ThemeSelector(object):
                             has_changed = True
         return has_changed
 
-
-
     def find_user_theme(self, repartition, user):
         for theme in repartition.keys():
             if user in repartition[theme]:
@@ -158,30 +154,6 @@ class ThemeSelector(object):
         repartition[theme].append(user)
         return repartition
 
-
-
-    def generate_solution_space(self, users, themes, limit=10000):
-        index_to_user = {i: user for i, user in enumerate(users)}
-        all_permutations = itertools.permutations(range(len(users)))
-
-        n_group = int(len(users) / len(themes))
-
-        all_solutions = []
-        for perm in all_permutations:
-            solution = {}
-            for i, theme in enumerate(themes):
-                if i != len(themes) - 1:
-                    solution[theme] = perm[i * n_group: (i + 1) * n_group]
-                else:
-                    solution[theme] = perm[i * n_group:]
-
-            real_solution = {t: [index_to_user[s] for s in solution[t]] for t in solution.keys()}
-            all_solutions.append(real_solution)
-            if len(all_solutions) > limit:
-                break
-
-        return all_solutions
-
     def evaluate_solution(self, solution, preferences):
 
         score = 0
@@ -191,6 +163,38 @@ class ThemeSelector(object):
                 score += score_calculation
 
         return score
+
+    def load_previous_repartition(self, load_path):
+        """
+        Load from path like : path -- T1-*
+                                    |-T2-*.txt
+                                    |-T3-
+        :param load_path:
+        :return:
+        """
+        self.repartitions = {}
+        all_users = []
+        all_themes = [t for t in os.listdir(load_path)
+                      if t not in [".DS_Store", "all_users.txt"]]
+        for t in all_themes:
+            if t not in self.repartitions.keys():
+                self.repartitions[t.lower()] = []
+
+            theme_dir = os.path.join(load_path, t)
+            user_files = os.listdir(theme_dir)
+
+            for user_file in user_files:
+                f = open(os.path.join(theme_dir, user_file))
+                for line in f:
+                    if '@' in line:
+                        user = line.rstrip()
+                        if len(user) > 200:
+                            continue
+                        self.repartitions[t.lower()].append(user)
+                        all_users.append(user)
+
+        print("Loaded repartition", sum([len(self.repartitions[t]) for t in self.repartitions.keys()]))
+        return all_users
 
 
 
