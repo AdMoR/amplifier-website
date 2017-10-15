@@ -55,7 +55,7 @@ class TestTeamRedis(TestCase):
             user_pref[u] = {1: theme_list[0], 1.1: theme_list[1], 1.11: theme_list[2]}
 
         ts = ThemeSelector(preference_dicts=user_pref, teams=[])
-        #ts.assign_theme_to_users()
+        ts.assign_theme_to_users()
 
         print([u for u in user_list if u not in ts.already_assigned])
 
@@ -69,7 +69,7 @@ class TestTeamRedis(TestCase):
 
         def set_dummy(r, email):
             r.hset(email, 'password', "plop")
-            r.hset(email, "session", None)
+            r.hset(email, "session", pickle.dumps({'favtheme': ["t1"]}))
 
         user_list = []
 

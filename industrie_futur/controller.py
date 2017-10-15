@@ -484,7 +484,7 @@ def theme_selector():
         for user in results[t]:
             final_results[t].append(user.decode('utf-8'))
 
-    to_include = [u for u in all_emails if u not in ts_se.already_assigned]
+    to_include = [u for u in all_emails if u not in th_se.already_assigned]
 
     return render_template("theme.html",
                            score=score,
