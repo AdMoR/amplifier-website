@@ -419,6 +419,7 @@ def message_all_display():
 @api_v1.route("/message_all", methods=['POST'])
 def message_all_emails():
 
+    already_sent_emails = ["abhro.choudhury1991@gmail.com", "adrien_morvan@hotmail.fr", "adrien.heinzelmeier@gadz.org", "aec2017@formation-industries-ca.fr", "alexis.bocuze@utt.fr", "amarzinedine@gmail.com", "ambadeka@yahoo.fr", "amelie.martin@2018.icam.fr", "antoine.bertrand@gadz.org", "c.esteve@outlook.fr", "kevin.verheecke@formation-industries-ca.fr", "saintjevinlea@gmail.com"]
     sent_back_form = request.form
     message = sent_back_form.get('message')
 
@@ -430,7 +431,7 @@ def message_all_emails():
     # Missed users
     success = []
     for email in email_list:
-        try:
+        if email in already_sent_emails:
             response = requests.post(url=config.get('helpbot_warning_url'),
                                      data=json.dumps({"email": email,
                                                       "message": message}),
@@ -438,7 +439,7 @@ def message_all_emails():
             response = json.loads(response.text)
             if response.get("status") == "Success":
                 success.append(email)
-        except:
+        else:
             print(email, "not ok")
 
     return render_template("message_all.html",
