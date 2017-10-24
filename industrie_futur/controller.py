@@ -411,6 +411,39 @@ def reinvite_missing_emails():
                            success=success), 200
 
 
+@api_v1.route("/message_all", methods=['GET'])
+def message_all_display():
+    return render_template("message_all.html"), 200
+
+
+@api_v1.route("/message_all", methods=['POST'])
+def message_all_emails():
+
+    sent_back_form = request.form
+    message = sent_back_form.get('message')
+
+    response = requests.get(url=config.get('helpbot_email_list'),
+                            headers={"Content-Type": "application/json"})
+    email_list = json.loads(response.text)['email_list']
+    email_list = [m for m in email_list]
+
+    # Missed users
+    success = []
+    for email in email_list:
+        if email == "adrien_morvan@hotmail.fr":
+            response = requests.post(url=config.get('helpbot_warning_url'),
+                                     data=json.dumps({"email": email,
+                                                      "messagge": message}),
+                                     headers={"Content-Type": "application/json"})
+            if response.get("status") == "Success":
+                success.append(email)
+        else:
+            print(email, "not ok")
+
+    return render_template("message_all.html",
+                           success=success), 200
+
+
 @api_v1.route("/theme_selector", methods=['GET'])
 def theme_selector():
 
