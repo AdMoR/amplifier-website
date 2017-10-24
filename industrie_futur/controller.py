@@ -435,7 +435,7 @@ def message_all_emails():
            email != "melissa.perez@gadz.org":
             continue
 
-        if email in already_sent_emails:
+        if email not in already_sent_emails:
             response = requests.post(url=config.get('helpbot_warning_url'),
                                      data=json.dumps({"email": email,
                                                       "message": message}),
