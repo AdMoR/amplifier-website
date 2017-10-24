@@ -435,6 +435,7 @@ def message_all_emails():
                                      data=json.dumps({"email": email,
                                                       "messagge": message}),
                                      headers={"Content-Type": "application/json"})
+            response = json.loads(response.text)
             if response.get("status") == "Success":
                 success.append(email)
         else:
