@@ -443,6 +443,8 @@ def message_all_emails():
             response = json.loads(response.text)
             if response.get("status") == "Success":
                 success.append(email)
+            else:
+                print(response)
         else:
             print(email, "not ok")
 
