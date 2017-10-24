@@ -431,9 +431,6 @@ def message_all_emails():
     # Missed users
     success = []
     for email in email_list:
-        if email != "adrien_morvan@hotmail.fr" and\
-           email != "melissa.perez@gadz.org":
-            continue
 
         if email not in already_sent_emails:
             response = requests.post(url=config.get('helpbot_warning_url'),
