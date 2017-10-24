@@ -430,15 +430,15 @@ def message_all_emails():
     # Missed users
     success = []
     for email in email_list:
-        try:
+        if email == "adrien_morvan@hotmail.fr":
             response = requests.post(url=config.get('helpbot_warning_url'),
                                      data=json.dumps({"email": email,
-                                                      "messagge": message}),
+                                                      "message": message}),
                                      headers={"Content-Type": "application/json"})
             response = json.loads(response.text)
             if response.get("status") == "Success":
                 success.append(email)
-        except:
+        else:
             print(email, "not ok")
 
     return render_template("message_all.html",
