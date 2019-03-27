@@ -1,0 +1,12 @@
+flask
+flask-cors
+flask-login
+pytest
+requests
+PyYAML
+redis
+numpy
+raven
+blinker
+gevent
+gunicorn

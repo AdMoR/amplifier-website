@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block header %}
+{% endblock %}
+
+{% block content %}
+
+<section id="form" class="music">
+
+  <img class="img-portfolio img-responsive" src="img/amplifier_logo.png" width="300px">
+
+  <div class="text-center"> <h2>Your ad is ready !!! </h2> </div>
+  <div>&nbsp;</div>
+
+  <figure class="center-block text-center">
+      <audio
+          controls
+          src="sound/combined.wav">
+              Your browser does not support the
+              <code>audio</code> element.
+      </audio>
+  </figure>
+  <div>&nbsp;</div>
+
+  {% if caption %}
+  <div class="center-block text-center">
+      Caption: {{ caption }}
+  </div>
+  {% endif %}
+  <div>&nbsp;</div>
+
+  <form role="form" action="{{url_for('website_amplifier.form')}}" method="post" enctype="multipart/form-data">
+              <div class="row col-centered">
+                <input type="submit" method="post" class="center-block btn btn-primary"></button>
+              </div>
+  </form>
+
+</section>
+
+
+
+{% endblock %}
