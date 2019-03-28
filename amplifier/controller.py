@@ -91,7 +91,7 @@ def build_ad(text, background_type):
 
     output_file_name = "{}.{}.mp3".format(wavenet_filename, background_type, config.SPEAKING_RATE, config.PITCH)
     output_path = "{}/{}".format(config.SOUND_PATH, output_file_name)
-    audiotools.mix_audio(background_path, wavenet_path, output_path)
+    audiotools.mix_audio(background_path, wavenet_path, output_path, loundness_diff=config.LOUDNESS_DIFF)
 
     return output_file_name
 

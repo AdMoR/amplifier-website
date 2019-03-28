@@ -1,7 +1,7 @@
 from pydub import AudioSegment
 import logging
 
-def mix_audio(background, voice, output_path, beginning_pad_seconds=1, end_pad_seconds=2):
+def mix_audio(background, voice, output_path, beginning_pad_seconds=1, end_pad_seconds=2, loundness_diff=2):
 
     background_sound = AudioSegment.from_file(background)
     voice_sound = AudioSegment.from_file(voice)
@@ -12,8 +12,14 @@ def mix_audio(background, voice, output_path, beginning_pad_seconds=1, end_pad_s
     background_sound_truncated = background_sound[:(total_len_seconds * 1000)]
 
     voice_padded = AudioSegment.silent(duration=beginning_pad_seconds * 1000) + voice_sound
+    print(voice_padded.dBFS)
+    print(background_sound_truncated.dBFS)
 
-    combined = background_sound_truncated.overlay(voice_padded)
+    loudness_diff = voice_padded.dBFS - background_sound_truncated.dBFS - loundness_diff
+
+    print(loudness_diff)
+
+    combined = (background_sound_truncated + loudness_diff).overlay(voice_padded)
 
     print(combined.duration_seconds)
 

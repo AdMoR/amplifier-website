@@ -8,6 +8,7 @@ import json
 class Config(object):
     PROJECT_PATH = os.path.dirname(os.path.abspath(__file__))
     SOUND_PATH = "{}/amplifier/static/sound".format(PROJECT_PATH)
+    LOUDNESS_DIFF = 4
 
     SPEAKING_RATE = 1.07
     PITCH = 0.8
