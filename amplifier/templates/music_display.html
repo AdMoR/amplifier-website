@@ -7,15 +7,18 @@
 
 <section id="form" class="music">
 
-  <img class="img-portfolio img-responsive" src="img/amplifier_logo.png" width="300px">
+<img class="img-portfolio img-responsive" src="img/amplifier_logo.png" width="450px">
 
-  <div class="text-center"> <h2>Your ad is ready !!! </h2> </div>
+   <fieldset class="col-centered col-sm-6">
+  <legend class="text-center"><h2>Your ad is ready !!!</h2></legend>
+  </fieldset>
+
   <div>&nbsp;</div>
 
   <figure class="center-block text-center">
       <audio
           controls
-          src="sound/combined.wav">
+          src={{ audio_file }}>
               Your browser does not support the
               <code>audio</code> element.
       </audio>
@@ -30,9 +33,9 @@
   <div>&nbsp;</div>
 
   <form role="form" action="{{url_for('website_amplifier.form')}}" method="post" enctype="multipart/form-data">
-              <div class="row col-centered">
-                <input type="submit" method="post" class="center-block btn btn-primary"></button>
-              </div>
+          <div class="row col-centered">
+            <input type="submit" method="post" class="center-block btn btn-primary" value="Publish your campaign"></button>
+          </div>
   </form>
 
 </section>
