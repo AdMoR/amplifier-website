@@ -7,6 +7,8 @@ import json
 
 class Config(object):
     PROJECT_PATH = os.path.dirname(os.path.abspath(__file__))
+    SOUND_PATH = "{}/amplifier/static/sound".format(PROJECT_PATH)
+
     INFRA_CONFIG_FILE_PATH = os.path.join(PROJECT_PATH, 'config.json')
 
     with open(INFRA_CONFIG_FILE_PATH) as CONFIG_FILE:

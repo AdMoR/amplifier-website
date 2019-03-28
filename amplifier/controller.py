@@ -2,6 +2,7 @@
 from __future__ import (absolute_import, division, print_function)
 
 import json
+import hashlib
 from flask import render_template, Blueprint, jsonify, request, send_from_directory, g
 from flask_login import login_user, logout_user, login_required, current_user
 from werkzeug.wrappers import Response
@@ -14,6 +15,8 @@ import requests
 import pickle
 from .user_data.user import User
 from .databases import RedisUserHandler, UserAlreadyCreatedException
+from . import audiotools
+from . import wavenet
 
 
 redis_access = RedisUserHandler()
@@ -45,16 +48,13 @@ def form():
 @api_v1.route("/form", methods=['POST'])
 def post_form():
     sent_back_form = request.form
-    name = sent_back_form.get("name")
-    ad_text = sent_back_form.get('ad_text')
-    background_type = sent_back_form.get('music')
+    name = request.form.get("name")
+    ad_text = request.form.get('ad_text')
+    background_type = request.form.get('music')
 
-    print(background_type)
-    sound_path = combine_audios(audio_a="amplifier/static/sound/test.wav", audio_b="amplifier/static/sound/{}.wav".format(background_type), export_name=name)
+    final_ad_filenname = build_ad(ad_text, background_type)
 
-    print(">>>>>>> ", ad_text)
-    sound_path = "sound/wurth1_with_music.wav"
-    return render_template("music_display.html", caption=ad_text, audio_file=sound_path), 200
+    return render_template("music_display.html", caption=ad_text, audio_file="sound/{}".format(final_ad_filenname)), 200
 
 
 @api_v1.route("/music", methods=['GET'])
@@ -64,6 +64,20 @@ def music():
 
 
 ######### Helpers ###################################
+
+def build_ad(text, background_type):
+    wavenet_filename = hashlib.sha1(b'text').hexdigest()
+    wavenet_path = "{}/{}.mp3".format(config.SOUND_PATH, wavenet_filename)
+
+    background_path = "{}/{}.wav".format(config.SOUND_PATH, background_type)
+
+    wavenet.generate_speech(output_path=wavenet_path, text=text)
+
+    output_file_name = "{}.{}.mp3".format(wavenet_filename, background_type)
+    output_path = "{}/{}".format(config.SOUND_PATH, output_file_name)
+    audiotools.mix_audio(background_path, wavenet_path, output_path)
+
+    return output_file_name
 
 
 def combine_audios(audio_a="test.wav", audio_b="ModernFashion.wav", export_name="export"):
