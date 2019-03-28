@@ -23,6 +23,10 @@ api_v1 = Blueprint('website_amplifier', __name__, template_folder='templates')
 # API calls handling tools
 #
 
+template = ["Looking for {PRODUCT_SUBCATEGORY}? Get on {CLIENT_WEBSITE}. We've got the best {PRODUCT_SUBCATEGORY}. {CLIENT_NAME}, {CLIENT_WEBSITE}.",
+            "Thinking about {PRODUCT_SUBCATEGORY}. Select the best quality, go for {CLIENT_NAME}, {CLIENT_WEBSITE}."]
+
+
 
 def format_response(response, status_code=200):
     response = Response(json.dumps(response), status=status_code,
@@ -39,17 +43,23 @@ def main():
 
 @api_v1.route("/form", methods=['GET'])
 def form():
-    return render_template("fill_form.html"), 200
+    return render_template("fill_form.html", template=template), 200
 
 
 @api_v1.route("/form", methods=['POST'])
 def post_form():
     sent_back_form = request.form
+
     name = sent_back_form.get("name")
-    ad_text = sent_back_form.get('ad_text')
+    is_template = sent_back_form.get("selectMe") != ""
+    ad_text = sent_back_form.get('ad_text') or sent_back_form.get("selectMe") or None
+    website = sent_back_form.get("website")
     background_type = sent_back_form.get('music')
 
-    print(background_type)
+    if is_template:
+        ad_text = ad_text.format(CLIENT_NAME=name, CLIENT_WEBSITE=website, PRODUCT_SUBCATEGORY="hammers")
+
+    print(ad_text)
     sound_path = combine_audios(audio_a="amplifier/static/sound/test.wav", audio_b="amplifier/static/sound/{}.wav".format(background_type), export_name=name)
 
     print(">>>>>>> ", ad_text)
