@@ -80,29 +80,15 @@ def build_ad(text, background_type):
     wavenet_filename = hashlib.sha1(b'text').hexdigest()
     wavenet_path = "{}/{}.mp3".format(config.SOUND_PATH, wavenet_filename)
 
-    background_path = "{}/{}.wav".format(config.SOUND_PATH, background_type)
+    background_path = "{}/{}".format(config.SOUND_PATH, background_type)
 
     wavenet.generate_speech(output_path=wavenet_path, text=text)
 
-    output_file_name = "{}.{}.mp3".format(wavenet_filename, background_type)
+    output_file_name = "{}.{}.mp3".format(wavenet_filename, background_type, config.SPEAKING_RATE, config.PITCH)
     output_path = "{}/{}".format(config.SOUND_PATH, output_file_name)
     audiotools.mix_audio(background_path, wavenet_path, output_path)
 
     return output_file_name
-
-
-def combine_audios(audio_a="test.wav", audio_b="ModernFashion.wav", export_name="export"):
-
-    export_path = "sound/{}.wav".format(export_name)
-
-    voice1 = AudioSegment.from_file(audio_a)
-    soundtrack = AudioSegment.from_file(audio_b)
-    combined = soundtrack.overlay(voice1, position=5000)
-
-    combined.export("amplifier/static/" + export_path, format='wav')
-    return export_path
-
-
 
 ######### Session ##############################################################
 @login_manager.user_loader

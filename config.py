@@ -9,6 +9,9 @@ class Config(object):
     PROJECT_PATH = os.path.dirname(os.path.abspath(__file__))
     SOUND_PATH = "{}/amplifier/static/sound".format(PROJECT_PATH)
 
+    SPEAKING_RATE = 1.07
+    PITCH = 0.8
+
     INFRA_CONFIG_FILE_PATH = os.path.join(PROJECT_PATH, 'config.json')
 
     with open(INFRA_CONFIG_FILE_PATH) as CONFIG_FILE:

@@ -30,7 +30,7 @@ def list_voices():
         print('Natural Sample Rate Hertz: {}\n'.format(
             voice.natural_sample_rate_hertz))
 
-def generate_speech(output_path, text="Hello!"):
+def generate_speech(output_path, text="Hello!", speaking_rate=1.0, pitch=1.0):
 
     # Instantiates a client
     client = texttospeech.TextToSpeechClient()
@@ -48,7 +48,9 @@ def generate_speech(output_path, text="Hello!"):
 
     # Select the type of audio file you want returned
     audio_config = texttospeech.types.AudioConfig(
-        audio_encoding=texttospeech.enums.AudioEncoding.MP3)
+        audio_encoding=texttospeech.enums.AudioEncoding.MP3,
+        speaking_rate=speaking_rate,
+        pitch=pitch)
 
     # Perform the text-to-speech request on the text input with the selected
     # voice parameters and audio file type
