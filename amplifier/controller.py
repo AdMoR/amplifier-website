@@ -26,6 +26,10 @@ api_v1 = Blueprint('website_amplifier', __name__, template_folder='templates')
 # API calls handling tools
 #
 
+template = ["Looking for {PRODUCT_SUBCATEGORY}? Get on {CLIENT_WEBSITE}. We've got the best {PRODUCT_SUBCATEGORY}. {CLIENT_NAME}, {CLIENT_WEBSITE}.",
+            "Thinking about {PRODUCT_SUBCATEGORY}. Select the best quality, go for {CLIENT_NAME}, {CLIENT_WEBSITE}."]
+
+
 
 def format_response(response, status_code=200):
     response = Response(json.dumps(response), status=status_code,
@@ -42,15 +46,22 @@ def main():
 
 @api_v1.route("/form", methods=['GET'])
 def form():
-    return render_template("fill_form.html"), 200
+    return render_template("fill_form.html", template=template), 200
 
 
 @api_v1.route("/form", methods=['POST'])
 def post_form():
-    sent_back_form = request.form
     name = request.form.get("name")
-    ad_text = request.form.get('ad_text')
     background_type = request.form.get('music')
+    is_template = request.form.get("selectMe") != ""
+
+    ad_text = request.form.get('ad_text') or request.form.get("selectMe") or None
+    website = request.form.get("website")
+
+    if is_template:
+        ad_text = ad_text.format(CLIENT_NAME=name, CLIENT_WEBSITE=website, PRODUCT_SUBCATEGORY="hammers")
+
+    print(ad_text)
 
     final_ad_filenname = build_ad(ad_text, background_type)
 

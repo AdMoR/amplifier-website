@@ -47,4 +47,21 @@
     {% block scripts %} {% include 'script.html' %} {% endblock %}
   </body>
 
+  <script type="text/javascript">$(document).ready(function () {
+
+    $('#selectMe').change(function () {
+
+        $('#ad_text').html($( "#selectMe option:selected" ).val());
+        if($( "#selectMe option:selected" ).text() != "Free form"){
+            document.getElementById("ad_text").disabled = true;    
+        }
+        else{
+            document.getElementById("ad_text").disabled = false;    
+        }
+        
+
+    })
+});
+</script>
+
 </html>

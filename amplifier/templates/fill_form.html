@@ -24,9 +24,10 @@
   <legend class="text-center">Please enter the following informations :</legend>
   <form role="form" action="{{url_for('website_amplifier.form')}}" method="post" enctype="multipart/form-data">
         <span class="form-group">
-
-            <label class="center-block text-center" for="sel1">Brand name</label>
+            <label class="center-block text-center" for="sel0">Brand name</label>
             <input type="text" class="center-block text-center" name="name" id="name" placeholder="Name" />
+            <label class="center-block text-center" for="sel1">Website</label>
+            <input type="text" class="center-block text-center" name="website" id="website" placeholder="Website" />
         </span>
         <span>
             
@@ -57,7 +58,13 @@
 
 
             <div>&nbsp;</div>
-            <div class="row col-centered">
+            <div class="row col-centered"> 
+            <select class="form-control text-center col-lg-6" data-width="fit"  id="selectMe" name="selectMe">
+                <option class="form-control text-center" value="">Please select a category</option>
+                <option class="form-control text-center" value="">Free form</option>
+                <option class="form-control text-center" value="{{ template[0] }}">Template 1 : Get on our website</option>
+                <option class="form-control text-center" value="{{ template[1] }}">Template 2 : Choose the best</option>
+            </select>
               <label class="center-block text-center" for="ad_text"> <i class="glyphicon glyphicon-pushpin"></i>Ad text</label>
               <textarea class="form-control" rows="2" id="ad_text" name="ad_text"></textarea>
 
