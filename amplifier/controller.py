@@ -74,6 +74,11 @@ def music():
     return render_template("music_display.html", audio_file=sound_path), 200
 
 
+@api_v1.route("/dashboard", methods=['GET'])
+def dashboard():
+    return render_template("dashboard.html"), 200
+
+
 ######### Helpers ###################################
 
 def build_ad(text, background_type):
