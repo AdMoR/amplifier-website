@@ -54,12 +54,13 @@ def post_form():
     name = request.form.get("name")
     background_type = request.form.get('music')
     is_template = request.form.get("selectMe") != ""
+    subcategory = request.form.get("subcategory")
 
     ad_text = request.form.get('ad_text') or request.form.get("selectMe") or None
     website = request.form.get("website")
 
     if is_template:
-        ad_text = ad_text.format(CLIENT_NAME=name, CLIENT_WEBSITE=website, PRODUCT_SUBCATEGORY="hammers")
+        ad_text = ad_text.format(CLIENT_NAME=name, CLIENT_WEBSITE=website, PRODUCT_SUBCATEGORY=subcategory)
 
     print(ad_text)
 
