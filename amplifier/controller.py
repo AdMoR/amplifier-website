@@ -17,9 +17,10 @@ from .user_data.user import User
 from .databases import RedisUserHandler, UserAlreadyCreatedException
 from . import audiotools
 from . import wavenet
+from .databases.sqlite3 import SQLiteDB
 
 
-redis_access = RedisUserHandler()
+DB = SQLiteDB()
 api_v1 = Blueprint('website_amplifier', __name__, template_folder='templates')
 
 #
@@ -43,10 +44,25 @@ def main():
     return render_template("home_factored.html"), 200
 
 
-
 @api_v1.route("/form", methods=['GET'])
 def form():
     return render_template("fill_form.html", template=template), 200
+
+
+@api_v1.route("/add_template", methods=['GET'])
+def template():
+    return render_template("template.html", id=-1)
+
+
+@api_v1.route("/add_template", methods=['POST'])
+def post_template():
+    template = request.form.get("template")
+    category = request.form.get("category")
+    adapted_category = request.form.get("adapted_category")
+
+    DB.add_template(category, adapted_category, template, 0)
+
+    return render_template("template.html")
 
 
 @api_v1.route("/form", methods=['POST'])
