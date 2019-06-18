@@ -1,4 +1,8 @@
 import sqlite3
+from collections import namedtuple
+
+
+Template = namedtuple("Template", ["category", "adapted_category", "template"])
 
 
 class SQLiteDB:
@@ -24,14 +28,26 @@ class SQLiteDB:
         conn = sqlite3.connect(self.path)
         cursor = conn.cursor()
         t = (table, category)
-        cursor.execute('SELECT * FROM ? WHERE symbol=?', t)
-        rez = cursor.fetchone()[3]
+        cursor.execute('SELECT * FROM ? WHERE category=?', t)
+        conn.commit()
+        rez = Template(*cursor.fetchone()[1:])
         conn.close()
         return rez
+
+    def get_all_templates(self):
+        conn = sqlite3.connect(self.path)
+        cursor = conn.cursor()
+        cursor.execute('SELECT * FROM templates')
+        conn.commit()
+        all_rez = [Template(*l[1:]) for l in cursor.fetchall()]
+        conn.close()
+        return all_rez
 
     def add_template(self, category , adapted_category, template, category_id=None):
         conn = sqlite3.connect(self.path)
         cursor = conn.cursor()
-        cursor.execute("INSERT INTO templates VALUES (?, ?, ?, ?)",
+        rez = cursor.execute("INSERT INTO templates VALUES (?, ?, ?, ?)",
                             (0 if not category_id else category_id, category, adapted_category, template))
+        conn.commit()
+        print(">>>", rez)
         conn.close()

@@ -49,9 +49,16 @@ def form():
     return render_template("fill_form.html", template=template), 200
 
 
+@api_v1.route("/show_template", methods=['GET'])
+def show_template():
+    all_templates = DB.get_all_templates()
+    print(all_templates)
+    return render_template("template.html", templates=all_templates)
+
+
 @api_v1.route("/add_template", methods=['GET'])
 def template():
-    return render_template("template.html", id=-1)
+    return render_template("template.html")
 
 
 @api_v1.route("/add_template", methods=['POST'])
@@ -62,7 +69,7 @@ def post_template():
 
     DB.add_template(category, adapted_category, template, 0)
 
-    return render_template("template.html")
+    return render_template("template.html", success="Template successfully added")
 
 
 @api_v1.route("/form", methods=['POST'])
