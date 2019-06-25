@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block header %}
+{% endblock %}
+
+{% block content %}
+    {% if error %}
+        <div class="alert alert-warning text-center" role="alert">{{error}}</div>
+    {% endif %}
+
+    {% if success %}
+        <div class="alert alert-success text-center" role="alert">{{success}}</div>
+    {% endif %}
+
+<section id="form" class="about">
+
+    <!-- /.container -->
+
+
+
+<img class="img-portfolio img-responsive" src="img/amplifier_logo.png" width="450px">
+
+    {% if not templates %}
+
+   <fieldset class="col-centered col-sm-6">
+  <legend class="text-center">Please enter the following informations :</legend>
+  <form role="form" action="/add_template" method="post" enctype="multipart/form-data">
+
+        <span>
+
+            <div>
+                <label class="center-block text-center" for="sel3"><i class="glyphicon glyphicon-pushpin"></i>Fill your template</label>
+            </div>
+              <textarea class="form-control" rows="2" id="template" name="ad_text"></textarea>
+            <textarea class="form-control" rows="2" id="category" name="ad_text"></textarea>
+            <textarea class="form-control" rows="2" id="adapted_category" name="ad_text"></textarea>
+            <textarea class="form-control" rows="2" id="id" name="ad_text"></textarea>
+
+
+              <input type="submit" method="post" class="center-block btn btn-primary" id="adparams" value="Add"></button>
+            </div>
+
+
+
+      </span>
+    </form>
+  </fieldset>
+
+    {% else %}
+
+
+      <form role="form" action="/show_template" method="post" enctype="multipart/form-data">
+        <span class="form-group">
+
+            <select class="form-control" id="template" name="template" onchange="previewFilter()">
+                {% for template in templates %}
+                    <option class="form-control" value="{{template.template}}">{{template.adapted_category}}</option>
+                {% endfor %}
+            </select>
+
+            <div class="row center-block col-lg-12">
+              <input type="submit" class="center-block btn btn-primary"></button>
+            </div>
+
+        </span>
+      </form>
+
+
+    {% endif %}
+
+</section>
+{% endblock %}

@@ -8,6 +8,7 @@ enum34==1.1.6
 Flask==1.0.2
 Flask-Cors==3.0.7
 Flask-Login==0.4.1
+gevent==1.4.0
 google-api-core==1.8.2
 google-auth==1.6.3
 google-cloud-core==0.29.1
@@ -15,7 +16,9 @@ google-cloud-storage==1.14.0
 google-cloud-texttospeech==0.4.0
 google-resumable-media==0.3.2
 googleapis-common-protos==1.5.9
+greenlet==0.4.15
 grpcio==1.19.0
+gunicorn==19.9.0
 idna==2.8
 itsdangerous==1.1.0
 Jinja2==2.10

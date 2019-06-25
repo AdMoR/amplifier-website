@@ -27,9 +27,8 @@ api_v1 = Blueprint('website_amplifier', __name__, template_folder='templates')
 # API calls handling tools
 #
 
-template = ["Looking for {PRODUCT_SUBCATEGORY}? Get on {CLIENT_WEBSITE}. We've got the best {PRODUCT_SUBCATEGORY}. {CLIENT_NAME}, {CLIENT_WEBSITE}.",
-            "Thinking about {PRODUCT_SUBCATEGORY}. Select the best quality, go for {CLIENT_NAME}, {CLIENT_WEBSITE}."]
-
+global_template = ["Looking for {PRODUCT_SUBCATEGORY}? Get on {CLIENT_WEBSITE}. We've got the best {PRODUCT_SUBCATEGORY}. {CLIENT_NAME}, {CLIENT_WEBSITE}.",
+                   "Thinking about {PRODUCT_SUBCATEGORY}. Select the best quality, go for {CLIENT_NAME}, {CLIENT_WEBSITE}."]
 
 
 def format_response(response, status_code=200):
@@ -38,22 +37,20 @@ def format_response(response, status_code=200):
     return response
 
 
-@api_v1.route("/", methods=['GET'])
-@api_v1.route("/home", methods=['GET'])
-def main():
-    return render_template("home_factored.html"), 200
-
-
-@api_v1.route("/form", methods=['GET'])
-def form():
-    return render_template("fill_form.html", template=template), 200
-
-
 @api_v1.route("/show_template", methods=['GET'])
 def show_template():
     all_templates = DB.get_all_templates()
     print(all_templates)
     return render_template("template.html", templates=all_templates)
+
+
+@api_v1.route("/show_template", methods=['POST'])
+def create_template():
+    template = request.form.get("template")
+    background_type = "Calm.wav"
+    ad_text = template.format(CLIENT_NAME="default", CLIENT_WEBSITE="website dot com", PRODUCT_SUBCATEGORY="")
+    final_ad_filenname = build_ad(ad_text, background_type)
+    return render_template("music_display.html", caption=template, audio_file="sound/{}".format(final_ad_filenname)), 200
 
 
 @api_v1.route("/add_template", methods=['GET'])
@@ -68,9 +65,19 @@ def post_template():
     adapted_category = request.form.get("adapted_category")
 
     DB.add_template(category, adapted_category, template, 0)
-
     return render_template("template.html", success="Template successfully added")
 
+##########################################
+
+@api_v1.route("/", methods=['GET'])
+@api_v1.route("/home", methods=['GET'])
+def main():
+    return render_template("home_factored.html"), 200
+
+
+@api_v1.route("/form", methods=['GET'])
+def form():
+    return render_template("fill_form.html", template=global_template), 200
 
 @api_v1.route("/form", methods=['POST'])
 def post_form():
@@ -120,10 +127,10 @@ def build_ad(text, background_type):
     return output_file_name
 
 ######### Session ##############################################################
-@login_manager.user_loader
-def load_user(user_id):
-    this_user = User.get(redis_access, user_id)
-    return this_user
+#@login_manager.user_loader
+#def load_user(user_id):
+#    this_user = User.get(redis_access, user_id)
+#    return this_user
 
 
 @login_manager.unauthorized_handler
