@@ -1,0 +1,18 @@
+[Unit]
+Description=Website daemon
+After=network.target
+
+[Service]
+PIDFile=/run/gunicorn/pid
+User=c.labroy
+RuntimeDirectory=/home/c.labroy/code/amplifier-website
+WorkingDirectory=/home/c.labroy/code/amplifier-website
+ExecStart=/home/c.labroy/code/amplifier-website/amplifier_env/bin/gunicorn amplifier:app --workers 1 --worker-class=gevent --name amplifier --log-level INFO --access-logfile - -b localhost:5000 --access-logformat '[Gunicorn:%(p)s] %(h)s %(t)s "%(r)s" %(s)s %(b)s "%(f)s" "%(a)s"'
+
+ExecReload=/bin/kill -s HUP $MAINPID
+ExecStop=/bin/kill -s TERM $MAINPID
+PrivateTmp=true
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
