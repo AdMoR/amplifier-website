@@ -4,28 +4,25 @@ from __future__ import (absolute_import, division, print_function)
 import json
 import hashlib
 from flask import render_template, Blueprint, jsonify, request, send_from_directory, g
-from flask_login import login_user, logout_user, login_required, current_user
 from werkzeug.wrappers import Response
-from pydub import AudioSegment
-import random
 from config import Config as config
 from . import LOG, sentry, login_manager
 from . import app
-import requests
-import pickle
-from .user_data.user import User
-from .databases import RedisUserHandler, UserAlreadyCreatedException
+
 from . import audiotools
 from . import wavenet
 from .databases.sqlite3 import SQLiteDB
+from .databases.pandas_df_db import PandasDB
 
-
-DB = SQLiteDB()
+db = PandasDB('all_partners_ranked_by_sales.csv', 'all_top_selling_products_per_partner.csv',
+              'revised_category_names.csv', 'all_skeletons.csv')
 api_v1 = Blueprint('website_amplifier', __name__, template_folder='templates')
 
 #
 # API calls handling tools
 #
+
+
 
 global_template = ["Looking for {PRODUCT_SUBCATEGORY}? Get on {CLIENT_WEBSITE}. We've got the best {PRODUCT_SUBCATEGORY}. {CLIENT_NAME}, {CLIENT_WEBSITE}.",
                    "Thinking about {PRODUCT_SUBCATEGORY}. Select the best quality, go for {CLIENT_NAME}, {CLIENT_WEBSITE}."]
@@ -36,26 +33,22 @@ def format_response(response, status_code=200):
                         mimetype='application/json')
     return response
 
-
-@api_v1.route("/show_template", methods=['GET'])
-def show_template():
-    all_templates = DB.get_all_templates()
-    print(all_templates)
-    return render_template("template.html", templates=all_templates)
+@api_v1.route("pre_form", methods=["GET"])
+def register_brand():
+    return render_template("pre_form.html"), 200
 
 
-@api_v1.route("/show_template", methods=['POST'])
-def create_template():
-    template = request.form.get("template")
-    background_type = "Calm.wav"
-    ad_text = template.format(CLIENT_NAME="default", CLIENT_WEBSITE="website dot com", PRODUCT_SUBCATEGORY="")
-    final_ad_filenname = build_ad(ad_text, background_type)
-    return render_template("music_display.html", caption=template, audio_file="sound/{}".format(final_ad_filenname)), 200
+@api_v1.route("pre_form", methods=["POST"])
+def template_suggestion_brand():
+    name = request.form.get("name")
+    if not db.is_client_name_in(name):
+        return render_template("pre_form.html", error="wrong name"), 500
 
+    cat_name = db.find_product_categories_for_partner(name)
+    adapted_name, templates = db.find_adapted_name_and_template(cat_name)
 
-@api_v1.route("/add_template", methods=['GET'])
-def template():
-    return render_template("template.html")
+    return render_template("fill_form.html", template=templates), 200
+
 
 
 @api_v1.route("/add_template", methods=['POST'])
@@ -65,7 +58,7 @@ def post_template():
     adapted_category = request.form.get("adapted_category")
 
     DB.add_template(category, adapted_category, template, 0)
-    return render_template("template.html", success="Template successfully added")
+    return render_template("pre_form.html", success="Template successfully added")
 
 ##########################################
 

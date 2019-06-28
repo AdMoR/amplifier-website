@@ -3,6 +3,8 @@ Description=Website daemon
 After=network.target
 
 [Service]
+Environment="GOOGLE_APPLICATION_CREDENTIALS=/home/c.labroy/code/amplifier-website/credentials.json"
+Environment="PATH=$PATH:usr/local/lib/"
 PIDFile=/run/gunicorn/pid
 User=c.labroy
 RuntimeDirectory=/home/c.labroy/code/amplifier-website
