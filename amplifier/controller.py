@@ -107,13 +107,13 @@ def dashboard():
 
 def build_ad(text, background_type):
     wavenet_filename = hashlib.sha1(b'text').hexdigest()
-    wavenet_path = "{}/{}.mp3".format(config.SOUND_PATH, wavenet_filename)
+    wavenet_path = "{}/{}.wav".format(config.SOUND_PATH, wavenet_filename)
 
     background_path = "{}/{}".format(config.SOUND_PATH, background_type)
 
     wavenet.generate_speech(output_path=wavenet_path, text=text)
 
-    output_file_name = "{}.{}.mp3".format(wavenet_filename, background_type, config.SPEAKING_RATE, config.PITCH)
+    output_file_name = "{}.{}.wav".format(wavenet_filename, background_type, config.SPEAKING_RATE, config.PITCH)
     output_path = "{}/{}".format(config.SOUND_PATH, output_file_name)
     audiotools.mix_audio(background_path, wavenet_path, output_path, loundness_diff=config.LOUDNESS_DIFF)
 
