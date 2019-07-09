@@ -13,8 +13,8 @@ class PandasDB:
         return client_name in self.client_df["partner_name"].values
     def find_product_categories_for_partner(self, name):
         #df.join(top_sell_df, lsuffix="partner_name", rsuffix="partner_name", how="inner")
-        return self.top_selling_df[self.top_selling_df["partner_name"] == name].\
-            sort_values("num_sales_event").head()["category_name"].values
+        return self.top_selling_df[self.top_selling_df["partner_name"] == name]. \
+            sort_values("num_sales_event", ascending=False).head()["category_name"].values
     def find_adapted_name_and_template(self, category_name):
         results = self.revised_cat_df[self.revised_cat_df["category_name"] == category_name][["revised_category_name", "compatible_brandless_skeletons"]].values
         adapted_name, template_ids = str(results[0][0]), json.loads(results[0][1])

@@ -47,7 +47,7 @@ def template_suggestion_brand():
     cat_name = db.find_product_categories_for_partner(name)
     adapted_name, templates = db.find_adapted_name_and_template(cat_name)
 
-    return render_template("fill_form.html", template=templates), 200
+    return render_template("fill_form.html", template=templates.format(PRODUCT_SUBCATEGORY=adapted_name)), 200
 
 
 
