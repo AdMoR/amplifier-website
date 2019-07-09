@@ -48,7 +48,7 @@ def generate_speech(output_path, text="Hello!", speaking_rate=1.0, pitch=1.0):
 
     # Select the type of audio file you want returned
     audio_config = texttospeech.types.AudioConfig(
-        audio_encoding=texttospeech.enums.AudioEncoding.MP3,
+        audio_encoding=texttospeech.enums.AudioEncoding.LINEAR16,
         speaking_rate=speaking_rate,
         pitch=pitch)
 

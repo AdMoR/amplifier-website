@@ -27,4 +27,4 @@ def mix_audio(background, voice, output_path, beginning_pad_seconds=1, end_pad_s
 
     print(faded.duration_seconds)
 
-    faded.export(output_path, format='mp3')
+    faded.export(output_path, format='wav')
