@@ -24,8 +24,8 @@ api_v1 = Blueprint('website_amplifier', __name__, template_folder='templates')
 
 
 
-global_template = ["Looking for {PRODUCT_SUBCATEGORY}? Get on {CLIENT_WEBSITE}. We've got the best {PRODUCT_SUBCATEGORY}. {CLIENT_NAME}, {CLIENT_WEBSITE}.",
-                   "Thinking about {PRODUCT_SUBCATEGORY}. Select the best quality, go for {CLIENT_NAME}, {CLIENT_WEBSITE}."]
+global_template = [("Free form", ""), ("Template 1", "Looking for {PRODUCT_CATEGORY}? Get on {CLIENT_WEBSITE}. We've got the best {PRODUCT_CATEGORY}. {CLIENT_NAME}, {CLIENT_WEBSITE}."),
+                   ("Template 2", "Thinking about {PRODUCT_CATEGORY}. Select the best quality, go for {CLIENT_NAME}, {CLIENT_WEBSITE}.")]
 
 
 def format_response(response, status_code=200):
@@ -44,11 +44,14 @@ def template_suggestion_brand():
     if not db.is_client_name_in(name):
         return render_template("pre_form.html", error="wrong name"), 500
 
-    cat_names = db.find_product_categories_for_partner(name)
-    adapted_name, templates = db.find_adapted_name_and_template(cat_names[0])
-    formated_templates = [t.format(PRODUCT_SUBCATEGORY=adapted_name) for t in templates]
+    formated_templates = list()
 
-    return render_template("fill_form.html", template=formated_templates), 200
+    cat_names = db.find_product_categories_for_partner(name)
+    for cat_name in cat_names:
+        adapted_name, templates = db.find_adapted_name_and_template(cat_name)
+        formated_templates.extend([("Template {} for {}".format(i, adapted_name), t) for i, t in enumerate(templates)])
+
+    return render_template("fill_form.html", template=formated_templates, product=adapted_name, name=name), 200
 
 
 
@@ -84,7 +87,7 @@ def post_form():
     website = request.form.get("website")
 
     if is_template:
-        ad_text = ad_text.format(CLIENT_NAME=name, CLIENT_WEBSITE=website, PRODUCT_SUBCATEGORY=subcategory)
+        ad_text = ad_text.format(CLIENT_NAME=name, CLIENT_WEBSITE=website, PRODUCT_CATEGORY=subcategory)
 
     print(ad_text)
 

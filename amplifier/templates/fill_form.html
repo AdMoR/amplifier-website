@@ -25,26 +25,16 @@
   <form role="form" action="{{url_for('website_amplifier.form')}}" method="post" enctype="multipart/form-data">
         <span class="form-group">
             <label class="center-block text-center" for="sel0">Brand name</label>
-            <input type="text" class="center-block text-center" name="name" id="name" placeholder="Name" />
+            <input type="text" class="center-block text-center" name="name" id="name" placeholder="Name" value="{{ name }}" />
             <label class="center-block text-center" for="sel1">Website</label>
-            <input type="text" class="center-block text-center" name="website" id="website" placeholder="Website" />
+            <input type="text" class="center-block text-center" name="website" id="website" placeholder="Website" value="{{ website }}"/>
             <label class="center-block text-center" for="sel0">Product type</label>
-            <input type="text" class="center-block text-center" name="subcategory" id="subcategory" placeholder="Product type" />
+            <input type="text" class="center-block text-center" name="subcategory" id="subcategory" placeholder="Product type"  value="{{ product }}"/>
         </span>
         <span>
             
 
-            <div>&nbsp;</div>
-            <div>
-                <label class="center-block text-center" for="sel2"><i class="glyphicon glyphicon-pushpin"></i> Select a product category</label>
-            </div>
             <div class="center-block text-center">
-            <select class="form-control text-center col-lg-6" data-width="fit"  id="sel2" name="filter">
-                <option class="form-control text-center" value="">Please select a category</option>
-                <option class="form-control text-center" value="car">Car manufacturer</option>
-                <option class="form-control text-center" value="travel">Travel</option>
-                <option class="form-control text-center" value="retail">Retail brand</option>
-            </select>
 
             <div>&nbsp;</div>
             <div>
@@ -64,9 +54,9 @@
             <div class="row col-centered"> 
             <select class="form-control text-center col-lg-6" data-width="fit"  id="selectMe" name="selectMe">
                 <option class="form-control text-center" value="">Please select a category</option>
-                <option class="form-control text-center" value="">Free form</option>
-                <option class="form-control text-center" value="{{ template[0] }}">Template 1 : Get on our website</option>
-                <option class="form-control text-center" value="{{ template[1] }}">Template 2 : Choose the best</option>
+                {% for t in template %}
+                  <option class="form-control text-center" value="{{ t[1] }}">{{ t[0] }}</option>
+                {% endfor %}
             </select>
               <label class="center-block text-center" for="ad_text"> <i class="glyphicon glyphicon-pushpin"></i>Ad text</label>
               <textarea class="form-control" rows="2" id="ad_text" name="ad_text"></textarea>
