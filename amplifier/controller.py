@@ -44,10 +44,11 @@ def template_suggestion_brand():
     if not db.is_client_name_in(name):
         return render_template("pre_form.html", error="wrong name"), 500
 
-    cat_name = db.find_product_categories_for_partner(name)
-    adapted_name, templates = db.find_adapted_name_and_template(cat_name)
+    cat_names = db.find_product_categories_for_partner(name)
+    adapted_name, templates = db.find_adapted_name_and_template(cat_names[0])
+    formated_templates = [t.format(PRODUCT_SUBCATEGORY=adapted_name) for t in templates]
 
-    return render_template("fill_form.html", template=templates.format(PRODUCT_SUBCATEGORY=adapted_name)), 200
+    return render_template("fill_form.html", template=formated_templates), 200
 
 
 
