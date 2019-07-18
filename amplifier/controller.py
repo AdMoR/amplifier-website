@@ -3,6 +3,7 @@ from __future__ import (absolute_import, division, print_function)
 
 import json
 import hashlib
+import os
 from flask import render_template, Blueprint, jsonify, request, send_from_directory, g
 from werkzeug.wrappers import Response
 from config import Config as config
@@ -70,6 +71,12 @@ def post_template():
 @api_v1.route("/home", methods=['GET'])
 def main():
     return render_template("home_factored.html"), 200
+
+
+@api_v1.route("/gallery", methods=['GET'])
+def gellery():
+    audio_files = ["sound/{}".format(f) for f in os.listdir("amplifier/static/sound") if ".wav.wav" in f]
+    return render_template("gallery.html", audio_files=audio_files), 200
 
 
 @api_v1.route("/form", methods=['GET'])
