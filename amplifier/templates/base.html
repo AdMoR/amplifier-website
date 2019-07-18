@@ -51,16 +51,24 @@
 
     $('#selectMe').change(function () {
 
-        $('#ad_text').html($( "#selectMe option:selected" ).val());
+        var optionSelected = document.getElementById('selectMe');
+        var adText = document.getElementById('ad_text_field');
+
+        var associated_template = document.getElementById("template_value_" + optionSelected.value).value;
+        var associated_cat = document.getElementById("subcategory_" + optionSelected.value).value;
+
+        document.getElementById('ad_text_field').value = associated_template;
+        document.getElementById("subcategory").value = associated_cat;
+
         if($( "#selectMe option:selected" ).text() != "Free form"){
-            document.getElementById("ad_text").disabled = true;    
+            document.getElementById("ad_text_field").disabled = true;
         }
         else{
-            document.getElementById("ad_text").disabled = false;    
+            document.getElementById("ad_text_field").disabled = false;
         }
-        
 
     })
+
 });
 </script>
 

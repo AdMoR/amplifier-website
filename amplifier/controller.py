@@ -48,9 +48,12 @@ def template_suggestion_brand():
     formated_templates = list()
 
     cat_names = db.find_product_categories_for_partner(name)
+    count = 0
     for cat_name in cat_names:
         adapted_name, templates = db.find_adapted_name_and_template(cat_name)
-        formated_templates.extend([("Template {} for {}".format(i, adapted_name), t) for i, t in enumerate(templates)])
+        formated_templates.extend([("Template {} for {}".format(i, adapted_name), t, adapted_name, i)
+                                   for i, t in zip(range(count, count + len(templates)), templates)])
+        count += len(templates)
 
     return render_template("fill_form.html", template=formated_templates, product=adapted_name, name=name), 200
 
@@ -85,15 +88,16 @@ def form():
 
 @api_v1.route("/form", methods=['POST'])
 def post_form():
-    name = request.form.get("name")
     background_type = request.form.get('music')
-    is_template = request.form.get("selectMe") != ""
-    subcategory = request.form.get("subcategory")
+    template_id = request.form.get('selectMe')
+    ad_text = request.form.get('ad_text_field')
+    print(request.form.__dict__)
+    print(request.form)
 
-    ad_text = request.form.get('ad_text') or request.form.get("selectMe") or None
-    website = request.form.get("website")
-
-    if is_template:
+    if template_id != "":
+        name = request.form.get("name")
+        website = request.form.get("website")
+        subcategory = request.form.get("subcategory")
         ad_text = ad_text.format(CLIENT_NAME=name, CLIENT_WEBSITE=website, PRODUCT_CATEGORY=subcategory)
 
     print(ad_text)

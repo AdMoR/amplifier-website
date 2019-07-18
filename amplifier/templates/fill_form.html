@@ -55,11 +55,15 @@
             <select class="form-control text-center col-lg-6" data-width="fit"  id="selectMe" name="selectMe">
                 <option class="form-control text-center" value="">Please select a category</option>
                 {% for t in template %}
-                  <option class="form-control text-center" value="{{ t[1] }}">{{ t[0] }}</option>
+                  <option class="form-control text-center" value="{{ t[3] }}">{{ t[0] }}</option>
                 {% endfor %}
             </select>
+                {% for t in template %}
+                  <input type="hidden" id="subcategory_{{ t[3] }}" name="subcategory" value="{{ t[2] }}">
+                <input type="hidden" id="template_value_{{ t[3] }}" name="template_value" value="{{ t[1] }}">
+                {% endfor %}
               <label class="center-block text-center" for="ad_text"> <i class="glyphicon glyphicon-pushpin"></i>Ad text</label>
-              <textarea class="form-control" rows="2" id="ad_text" name="ad_text"></textarea>
+              <textarea class="form-control" rows="2" id="ad_text_field" name="ad_text_field"></textarea>
 
               <input type="submit" method="post" class="center-block btn btn-primary" id="adparams" value="Generate"></button>
             </div>
