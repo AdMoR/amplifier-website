@@ -26,8 +26,8 @@ api_v1 = Blueprint('website_amplifier', __name__, template_folder='templates')
 
 
 
-global_template = [("Free form", ""), ("Template 1", "Looking for {PRODUCT_CATEGORY}? Get on {CLIENT_WEBSITE}. We've got the best {PRODUCT_CATEGORY}. {CLIENT_NAME}, {CLIENT_WEBSITE}."),
-                   ("Template 2", "Thinking about {PRODUCT_CATEGORY}. Select the best quality, go for {CLIENT_NAME}, {CLIENT_WEBSITE}.")]
+global_template = [("Template 1", "Looking for {PRODUCT_CATEGORY}? Get on {CLIENT_WEBSITE}. We've got the best {PRODUCT_CATEGORY}. {CLIENT_NAME}, {CLIENT_WEBSITE}.", "", 0),
+                   ("Template 2", "Thinking about {PRODUCT_CATEGORY}. Select the best quality, go for {CLIENT_NAME}, {CLIENT_WEBSITE}.", "", 1)]
 
 
 def format_response(response, status_code=200):
