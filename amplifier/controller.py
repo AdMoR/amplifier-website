@@ -14,6 +14,7 @@ from . import audiotools
 from . import wavenet
 from .databases.sqlite3 import SQLiteDB
 from .databases.pandas_df_db import PandasDB
+from .databases.mock_pandas_df import MockPandasDB
 
 db = PandasDB('all_partners_ranked_by_sales.csv', 'all_top_selling_products_per_partner.csv',
               'revised_category_names.csv', 'all_skeletons.csv')
@@ -90,17 +91,13 @@ def form():
 def post_form():
     background_type = request.form.get('music')
     template_id = request.form.get('selectMe')
-    ad_text = request.form.get('ad_text_field')
-    print(request.form.__dict__)
-    print(request.form)
 
     if template_id != "":
         name = request.form.get("name")
         website = request.form.get("website")
-        subcategory = request.form.get("subcategory")
+        subcategory = request.form.get("subcategory".format(template_id))
+        ad_text = request.form.get('template_value_{}'.format(template_id))
         ad_text = ad_text.format(CLIENT_NAME=name, CLIENT_WEBSITE=website, PRODUCT_CATEGORY=subcategory)
-
-    print(ad_text)
 
     final_ad_filenname = build_ad(ad_text, background_type)
 

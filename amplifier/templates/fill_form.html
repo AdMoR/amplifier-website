@@ -59,10 +59,10 @@
                 {% endfor %}
             </select>
                 {% for t in template %}
-                  <input type="hidden" id="subcategory_{{ t[3] }}" name="subcategory" value="{{ t[2] }}">
-                <input type="hidden" id="template_value_{{ t[3] }}" name="template_value" value="{{ t[1] }}">
+                  <input type="hidden" name="subcategory_{{ t[3] }}" value="{{ t[2] }}">
+                  <input type="hidden" name="template_value_{{ t[3] }}" value="{{ t[1] }}">
                 {% endfor %}
-              <label class="center-block text-center" for="ad_text"> <i class="glyphicon glyphicon-pushpin"></i>Ad text</label>
+              <label class="center-block text-center" for="ad_text_field"> <i class="glyphicon glyphicon-pushpin"></i>Ad text</label>
               <textarea class="form-control" rows="2" id="ad_text_field" name="ad_text_field"></textarea>
 
               <input type="submit" method="post" class="center-block btn btn-primary" id="adparams" value="Generate"></button>
