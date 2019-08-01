@@ -1,22 +1,20 @@
     <!-- jQuery -->
     <script src="js/jquery.js"></script>
+    <script src="js/jquery-ui.js"></script>
 
     <!-- Bootstrap Core JavaScript -->
     <script src="js/bootstrap.min.js"></script>
 
     <!-- Custom Theme JavaScript -->
     <script>
-    // Closes the sidebar menu
     $("#menu-close").click(function(e) {
         e.preventDefault();
         $("#sidebar-wrapper").toggleClass("active");
     });
-    // Opens the sidebar menu
     $("#menu-toggle").click(function(e) {
         e.preventDefault();
         $("#sidebar-wrapper").toggleClass("active");
     });
-    // Scrolls to the selected menu item on the page
     $(function() {
         $('a[href*=#]:not([href=#],[data-toggle],[data-target],[data-slide])').click(function() {
             if (location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') || location.hostname == this.hostname) {
@@ -31,7 +29,6 @@
             }
         });
     });
-    //#to-top button appears after scrolling
     var fixed = false;
     $(document).scroll(function() {
         if ($(this).scrollTop() > 250) {
@@ -56,9 +53,6 @@
             }
         }
     });
-    // Disable Google Maps scrolling
-    // See http://stackoverflow.com/a/25904582/1607849
-    // Disable scroll zooming and bind back the click event
     var onMapMouseleaveHandler = function(event) {
         var that = $(this);
         that.on('click', onMapClickHandler);

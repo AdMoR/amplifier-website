@@ -12,17 +12,17 @@
         <div class="alert alert-success text-center" role="alert">{{success}}</div>
     {% endif %}
 
+
 <section id="form" class="about">
 
     <!-- /.container -->
-
 
     <fieldset class="col-centered col-sm-6">
         <legend class="text-center">Please enter the following informations :</legend>
         <form role="form" action="/pre_form" method="post" enctype="multipart/form-data">
             <span class="form-group">
                 <label class="center-block text-center" for="sel0">Brand name</label>
-                <input type="text" class="center-block text-center" name="name" id="name" placeholder="Name" />
+                <input type="text" class="center-block text-center" name="name" id="autocomplete" autocomplete="on" placeholder="Name" />
             </span>
             <input type="submit" method="post" class="center-block btn btn-primary" id="adparams" value="Start"></button>
     </form>

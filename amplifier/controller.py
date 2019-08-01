@@ -25,7 +25,6 @@ api_v1 = Blueprint('website_amplifier', __name__, template_folder='templates')
 #
 
 
-
 global_template = [("Template 1", "Looking for {PRODUCT_CATEGORY}? Get on {CLIENT_WEBSITE}. We've got the best {PRODUCT_CATEGORY}. {CLIENT_NAME}, {CLIENT_WEBSITE}.", "", 0),
                    ("Template 2", "Thinking about {PRODUCT_CATEGORY}. Select the best quality, go for {CLIENT_NAME}, {CLIENT_WEBSITE}.", "", 1)]
 
@@ -43,8 +42,8 @@ def register_brand():
 @api_v1.route("pre_form", methods=["POST"])
 def template_suggestion_brand():
     name = request.form.get("name")
-    if not db.is_client_name_in(name):
-        return render_template("pre_form.html", error="wrong name"), 500
+    if not db.is_client_name_in(name.upper()) and not db.is_client_name_in(name.lower()):
+        return render_template("pre_form.html", error="Wrong brand name"), 500
 
     formated_templates = list()
 
@@ -52,11 +51,25 @@ def template_suggestion_brand():
     count = 0
     for cat_name in cat_names:
         adapted_name, templates = db.find_adapted_name_and_template(cat_name)
+        if adapted_name is None:
+            continue
         formated_templates.extend([("Template {} for {}".format(i, adapted_name), t, adapted_name, i)
                                    for i, t in zip(range(count, count + len(templates)), templates)])
         count += len(templates)
 
     return render_template("fill_form.html", template=formated_templates, product=adapted_name, name=name), 200
+
+
+@api_v1.route("/autocomplete", methods=['GET'])
+def autocomplete():
+    search = request.args.get('q')
+    names = sorted([n for n in db.all_client_names() if search in n.lower()])
+    return jsonify(matching_results=names)
+
+
+@api_v1.route("/autocomplete_test", methods=['GET'])
+def test_page_auto():
+    return render_template("autocomplete.html")
 
 
 
